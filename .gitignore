@@ -18,7 +18,56 @@ media/
 .DS_Store
 Thumbs.db
 
+# Windows-specific
+ehthumbs.db
+Desktop.ini
+*.lnk
+
+# Docker Compose override and backup files
+docker-compose.override.yaml
+docker-compose.*.bak
+
+# SQLite and other DBs
+*.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal
+
+# Log and cache folders
+logs/
+logs/**
+cache/
+cache/**
+
+# Ignore image cache and generated images
+image/**/cache/
+image/**/thumbnails/
+
+# Ignore all local .env and secrets
+secrets.env
+*.secrets
+
+# Ignore system-specific folders
+.idea/
+.history/
+.tmp/
+.temp/
+
 # Ignore any backup or temp files
-*~
-*.swp
-*.tmp
+
+# Ignore runtime/data folders and all their contents recursively
+appdata/**
+downloads/**
+jellyfin/**
+media/**
+
+# Ignore all database, log, and temp files in appdata and subfolders
+appdata/**/*.db*
+appdata/**/*.log*
+appdata/**/*.txt
+appdata/**/logs/**
+
+# Ignore .env in compose_files
+compose_files/.env
+
+*.debug.txt
+*.bak

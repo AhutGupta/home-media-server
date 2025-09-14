@@ -99,6 +99,9 @@ services:
       - ${COMMON_PATH}/appdata/jellyfin:/config
       - ${COMMON_PATH}/jellyfin/cache:/cache
       - ${COMMON_PATH}/media:/media:ro
+      - ${MEDIA_MOVIES}:/media/Movies:ro
+      - ${MEDIA_TV}:/media/TV:ro
+      - ${MEDIA_PERSONAL}:/media/Personal:ro
     restart: unless-stopped
   jellyseerr:
     image: fallenbagel/jellyseerr:latest
@@ -110,6 +113,9 @@ services:
       - 5055:5055
     volumes:
       - ${COMMON_PATH}/appdata/jellyseerr:/app/config
+      - ${MEDIA_MOVIES}:/media/Movies:ro
+      - ${MEDIA_TV}:/media/TV:ro
+      - ${MEDIA_PERSONAL}:/media/Personal:ro
     restart: unless-stopped
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
