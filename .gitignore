@@ -1,5 +1,24 @@
-.gitignore
-.git
+# Ignore runtime/data folders
+appdata/
+downloads/
+jellyfin/
+media/
 
-# /image
-# .env
+# Ignore Docker and system files
+*.pid
+*.log
+*.sock
+
+# Ignore environment and config overrides
+.env
+.env.*
+
+# VSCode and OS files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Ignore any backup or temp files
+*~
+*.swp
+*.tmp
