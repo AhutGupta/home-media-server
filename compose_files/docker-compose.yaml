@@ -1,23 +1,22 @@
 ---
-version: "3.3"
+version: "3.9"
 services:
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
     environment:
       - WEBUI_PORT=8080
-      - PUID=0
-      - PGID=0
+      - PUID=1000
+      - PGID=1000
       - TZ=${TZ}
       # - DOCKER_MODS=ghcr.io/gabe565/linuxserver-mod-vuetorrent
     volumes:
-      - ${COMMON_PATH}:${COMMON_PATH}
-      - ${COMMON_PATH}/configs/qbittorrent:/config
-      - ${COMMON_PATH}/qbittorrent/downloads:/downloads
+      - ${COMMON_PATH}/appdata/qbittorrent:/config
+      - ${COMMON_PATH}/downloads:/downloads
     ports:
-      - 8080:8080
-      - 6881:6881
-      - 6881:6881/udp
+      - 127.0.0.1:8080:8080
+      - 127.0.0.1:6881:6881
+      - 127.0.0.1:6881:6881/udp
     restart: unless-stopped
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -28,84 +27,78 @@ services:
       - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
       - TZ=${TZ}
       #- LANG=fr_FR
-      #- LANG=en_US
+      - LANG=en_US
     ports:
-      - 8191:8191
+      - 127.0.0.1:8191:8191
     restart: unless-stopped
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
     environment:
-      - PUID=0
-      - PGID=0
+      - PUID=1000
+      - PGID=1000
       - TZ=${TZ}
     volumes:
-      - ${COMMON_PATH}/configs/prowlarr:/config
+      - ${COMMON_PATH}/appdata/prowlarr:/config
     ports:
-      - 9696:9696
+      - 127.0.0.1:9696:9696
     restart: unless-stopped
   jackett:
     image: lscr.io/linuxserver/jackett:latest
     container_name: jackett
     environment:
-      - PUID=0
-      - PGID=0
+      - PUID=1000
+      - PGID=1000
       - TZ=${TZ}
     volumes:
-      - ${COMMON_PATH}/configs/jackett:/config
+      - ${COMMON_PATH}/appdata/jackett:/config
     ports:
-      - 9117:9117
+      - 127.0.0.1:9117:9117
     restart: unless-stopped
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     environment:
-      - PUID=0
-      - PGID=0
+      - PUID=1000
+      - PGID=1000
       - TZ=${TZ}
     volumes:
-      - ${COMMON_PATH}:${COMMON_PATH}
-      - ${COMMON_PATH}/configs/sonarr:/config
-      - ${COMMON_PATH}/sonarr/tv:/tv
-      - ${COMMON_PATH}/qbittorrent/downloads:/downloads
+      - ${COMMON_PATH}/appdata/sonarr:/config
+      - ${COMMON_PATH}/media/tv:/tv
+      - ${COMMON_PATH}/downloads:/downloads
     ports:
-      - 8989:8989
+      - 127.0.0.1:8989:8989
     restart: unless-stopped
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
     environment:
-      - PUID=0
-      - PGID=0
+      - PUID=1000
+      - PGID=1000
       - TZ=${TZ}
     volumes:
-      - ${COMMON_PATH}:${COMMON_PATH}
-      - ${COMMON_PATH}/configs/radarr:/config
-      - ${COMMON_PATH}/radarr/movies:/movies
-      - ${COMMON_PATH}/qbittorrent/downloads:/downloads
+      - ${COMMON_PATH}/appdata/radarr:/config
+      - ${COMMON_PATH}/media/movies:/movies
+      - ${COMMON_PATH}/downloads:/downloads
     ports:
-      - 7878:7878
+      - 127.0.0.1:7878:7878
     restart: unless-stopped
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
     container_name: jellyfin
     environment:
-      - PUID=0
-      - PGID=0
+      - PUID=1000
+      - PGID=1000
       - TZ=${TZ}
-      - NVIDIA_VISIBLE_DEVICES=all
     ports:
-      - 8096:8096
-      - 8920:8920
-      - 7359:7359/udp
-      - 1900:1900/udp
+      - 127.0.0.1:8096:8096
+      # - 8920:8920
+      # - 7359:7359/udp
+      # - 1900:1900/udp
     volumes:
-      - ${COMMON_PATH}:${COMMON_PATH}
-      - ${COMMON_PATH}/configs/jellyfin:/config
+      - ${COMMON_PATH}/appdata/jellyfin:/config
       - ${COMMON_PATH}/jellyfin/cache:/cache
-      - ${COMMON_PATH}/sonarr/tv:/data/tvshows
-      - ${COMMON_PATH}/radarr/movies:/data/movies
-      - ${COMMON_PATH}/qbittorrent/downloads:/data/media_downloads
+      - ${COMMON_PATH}/media:/media:ro
     restart: unless-stopped
   jellyseerr:
     image: fallenbagel/jellyseerr:latest
@@ -114,7 +107,56 @@ services:
       - LOG_LEVEL=debug
       - TZ=${TZ}
     ports:
-      - 5055:5055
+      - 127.0.0.1:5055:5055
     volumes:
-      - ${COMMON_PATH}/configs/jellyseerr:/app/config
+      - ${COMMON_PATH}/appdata/jellyseerr:/app/config
+    restart: unless-stopped
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - ${COMMON_PATH}/appdata/bazarr:/config
+      - ${COMMON_PATH}/media/movies:/movies:ro
+      - ${COMMON_PATH}/media/tv:/tv:ro
+    ports:
+      - 127.0.0.1:6767:6767
+    restart: unless-stopped
+  whisparr:
+    image: ghcr.io/hotio/whisparr:latest
+    container_name: whisparr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - ${COMMON_PATH}/appdata/whisparr:/config
+      - ${COMMON_PATH}/media/conf:/a
+      - ${COMMON_PATH}/downloads:/downloads
+    ports:
+      - 127.0.0.1:6969:6969
+    restart: unless-stopped
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${COMMON_PATH}/appdata/portainer:/data
+    ports:
+      - 127.0.0.1:9443:9443
+    restart: unless-stopped
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    environment:
+      - DOZZLE_LEVEL=info
+      - DOZZLE_NO_ANALYTICS=true
+      - TZ=${TZ}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 127.0.0.1:9999:8080
     restart: unless-stopped

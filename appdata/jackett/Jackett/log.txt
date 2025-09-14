@@ -1,0 +1,22 @@
+2025-09-13 20:51:00.1773 Info Starting Jackett v0.23.12
+2025-09-13 20:51:05.5157 Info Environment version: 8.0.20 (/app/Jackett/)
+2025-09-13 20:51:05.5529 Info OS version: Unix 6.10.14.0 (64bit OS) (64bit process)
+2025-09-13 20:51:05.6166 Info Jackett variant: CoreLinuxMuslArm64
+2025-09-13 20:51:05.6302 Info File /etc/issue: Welcome to Alpine Linux 3.22
+2025-09-13 20:51:05.6402 Info Running in Docker: Yes (image build: v0.23.12-ls151)
+2025-09-13 20:51:05.6802 Info ThreadPool MaxThreads: 32767 workerThreads, 1000 completionPortThreads
+2025-09-13 20:51:05.6972 Info App config/log directory: /config/Jackett
+2025-09-13 20:51:05.7102 Info Using proxy: Disabled
+2025-09-13 20:51:05.7239 Info Using FlareSolverr: No
+2025-09-13 20:51:05.7312 Info Using HTTP Client: HttpWebClient2
+2025-09-13 20:51:05.8133 Info Loading Native indexers ...
+2025-09-13 20:51:06.3470 Info Loaded 75 Native indexers.
+2025-09-13 20:51:06.3643 Info Loading Cardigann indexers from: /config/cardigann/definitions/, /etc/xdg/cardigan/definitions/, /app/Jackett/Definitions
+2025-09-13 20:51:15.5726 Info Loaded 520 Cardigann indexers.
+2025-09-13 20:51:15.5829 Info Loaded 595 indexers in total
+2025-09-13 20:51:16.0171 Info Adding aggregate indexer ('all' indexer) ...
+2025-09-13 20:51:16.0672 Info Adding filter indexer ('type:public' indexer) ...
+2025-09-13 20:51:16.0708 Info Adding filter indexer ('type:private' indexer) ...
+2025-09-13 20:51:16.0724 Info Adding filter indexer ('type:semi-public' indexer) ...
+2025-09-13 20:51:16.4257 Warn No XML encryptor configured. Key {42990a0c-97a6-4f84-be52-fa1610826765} may be persisted to storage in unencrypted form.
+2025-09-13 20:51:16.7047 Info Jackett startup finished in 17.883 s
