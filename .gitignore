@@ -1,9 +1,3 @@
-# Ignore runtime/data folders
-appdata/
-downloads/
-jellyfin/
-media/
-
 # Ignore Docker and system files
 *.pid
 *.log
@@ -61,10 +55,13 @@ jellyfin/**
 media/**
 
 # Ignore all database, log, and temp files in appdata and subfolders
-appdata/**/*.db*
-appdata/**/*.log*
+appdata\
+appdata/
+appdata/**
+appdata/**/.db
+appdata/**/.log
 appdata/**/*.txt
-appdata/**/logs/**
+appdata//logs/
 
 # Ignore .env in compose_files
 compose_files/.env
