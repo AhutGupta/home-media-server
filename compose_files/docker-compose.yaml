@@ -87,7 +87,7 @@ services:
       - ${COMMON_PATH}/downloads:/downloads
       - ${MEDIA_TV}:/media/TV
       - ${MEDIA_PERSONAL}:/media/personal
-      - ${DRIVE_TV_SERIES}:/media/drive/TV:ro
+      - "${DRIVE_TV_SERIES}:/media/drive/TV:ro"
     ports:
       - 8989:8989
     restart: unless-stopped
@@ -103,7 +103,7 @@ services:
       - ${COMMON_PATH}/appdata/app/radarr:/config
       - ${COMMON_PATH}/downloads:/downloads
       - ${MEDIA_MOVIES}:/media/Movies
-      - ${DRIVE_MOVIES}:/media/drive/Movies:ro
+      - "${DRIVE_MOVIES}:/media/drive/Movies:ro"
 
     ports:
       - 7878:7878
@@ -150,8 +150,8 @@ services:
       - ${MEDIA_PERSONAL}:/media/Personal:ro
       - ${MEDIA_TEST}:/media/test:ro
       - ${DRIVE_MOVIES}:/media/drive/Movies:ro
-      - ${DRIVE_TV_SERIES}:/media/drive/TV:ro
-      - ${DRIVE_TEST}:/media/drive/test:ro
+      - "${DRIVE_TV_SERIES}:/media/drive/TV:ro"
+      - "${DRIVE_TEST}:/media/drive/test:ro"
     restart: unless-stopped
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
@@ -165,8 +165,8 @@ services:
       - ${COMMON_PATH}/appdata/app/bazarr:/config
       - ${MEDIA_MOVIES}:/movies:ro
       - ${MEDIA_TV}:/tv:ro
-      - ${DRIVE_MOVIES}:/media/drive/Movies:ro
-      - ${DRIVE_TV_SERIES}:/media/drive/TV:ro
+      - "${DRIVE_MOVIES}:/media/drive/Movies:ro"
+      - "${DRIVE_TV_SERIES}:/media/drive/TV:ro"
     ports:
       - 6767:6767
     restart: unless-stopped
@@ -182,7 +182,7 @@ services:
       - ${COMMON_PATH}/appdata/app/whisparr:/config
       - ${COMMON_PATH}/downloads:/downloads
       - ${MEDIA_TEST}:/media/test
-      - ${DRIVE_TEST}:/media/drive/test:ro
+      - "${DRIVE_TEST}:/media/drive/test:ro"
     ports:
       - 6969:6969
     restart: unless-stopped
