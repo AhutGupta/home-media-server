@@ -55,7 +55,7 @@ jellyfin/**
 media/**
 
 # Ignore all database, log, and temp files in appdata and subfolders
-appdata\
+appdata\*
 appdata/
 appdata/**
 appdata/**/.db
