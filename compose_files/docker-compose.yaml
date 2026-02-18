@@ -1,6 +1,21 @@
 ---
 version: "3.9"
 services:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - jellyfin
+      - jellyseerr
+      - sonarr
+      - radarr
+      - whisparr
+    restart: unless-stopped
+  
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
@@ -9,9 +24,11 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=${TZ}
+      - UMASK=002
       # - DOCKER_MODS=ghcr.io/gabe565/linuxserver-mod-vuetorrent
+    # Persist qBittorrent config and downloads
     volumes:
-      - ${COMMON_PATH}/appdata/qbittorrent:/config
+      - ${COMMON_PATH}/appdata/app/qbittorrent:/config
       - ${COMMON_PATH}/downloads:/downloads
     ports:
       - 127.0.0.1:8080:8080
@@ -38,8 +55,9 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=${TZ}
+    # Persist Prowlarr config
     volumes:
-      - ${COMMON_PATH}/appdata/prowlarr:/config
+      - ${COMMON_PATH}/appdata/app/prowlarr:/config
     ports:
       - 127.0.0.1:9696:9696
     restart: unless-stopped
@@ -50,8 +68,9 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=${TZ}
+    # Persist Jackett config
     volumes:
-      - ${COMMON_PATH}/appdata/jackett:/config
+      - ${COMMON_PATH}/appdata/app/jackett:/config
     ports:
       - 127.0.0.1:9117:9117
     restart: unless-stopped
@@ -62,10 +81,13 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=${TZ}
+    # Persist Sonarr config and media
     volumes:
-      - ${COMMON_PATH}/appdata/sonarr:/config
-      - ${COMMON_PATH}/media/tv:/tv
+      - ${COMMON_PATH}/appdata/app/sonarr:/config
       - ${COMMON_PATH}/downloads:/downloads
+      - ${MEDIA_TV}:/media/TV
+      - ${MEDIA_PERSONAL}:/media/personal
+      - ${DRIVE_TV_SERIES}:/media/drive/TV:ro
     ports:
       - 127.0.0.1:8989:8989
     restart: unless-stopped
@@ -76,10 +98,13 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=${TZ}
+    # Persist Radarr config and media
     volumes:
-      - ${COMMON_PATH}/appdata/radarr:/config
-      - ${COMMON_PATH}/media/movies:/movies
+      - ${COMMON_PATH}/appdata/app/radarr:/config
       - ${COMMON_PATH}/downloads:/downloads
+      - ${MEDIA_MOVIES}:/media/Movies
+      - ${DRIVE_MOVIES}:/media/drive/Movies:ro
+
     ports:
       - 127.0.0.1:7878:7878
     restart: unless-stopped
@@ -95,10 +120,19 @@ services:
       # - 8920:8920
       # - 7359:7359/udp
       # - 1900:1900/udp
+    # Persist Jellyfin config, cache, and media (read-only for media)
     volumes:
-      - ${COMMON_PATH}/appdata/jellyfin:/config
+      - ${COMMON_PATH}/appdata/app/jellyfin:/config
       - ${COMMON_PATH}/jellyfin/cache:/cache
-      - ${COMMON_PATH}/media:/media:ro
+      - ${COMMON_PATH}/downloads:/downloads
+      - ${MEDIA_MOVIES}:/media/Movies:ro
+      - ${MEDIA_TV}:/media/TV:ro
+      - ${MEDIA_PERSONAL}:/media/Personal:ro
+      - ${MEDIA_TEST}:/media/test:ro
+      - ${DRIVE_MOVIES}:/media/drive/Movies:ro
+      - ${DRIVE_TV_SERIES}:/media/drive/TV:ro
+      - ${DRIVE_TEST}:/media/drive/test:ro
+
     restart: unless-stopped
   jellyseerr:
     image: fallenbagel/jellyseerr:latest
@@ -108,8 +142,16 @@ services:
       - TZ=${TZ}
     ports:
       - 127.0.0.1:5055:5055
+    # Persist Jellyseerr config and media (read-only for media)
     volumes:
-      - ${COMMON_PATH}/appdata/jellyseerr:/app/config
+      - ${COMMON_PATH}/appdata/app/jellyseerr:/app/config
+      - ${MEDIA_MOVIES}:/media/Movies:ro
+      - ${MEDIA_TV}:/media/TV:ro
+      - ${MEDIA_PERSONAL}:/media/Personal:ro
+      - ${MEDIA_TEST}:/media/test:ro
+      - ${DRIVE_MOVIES}:/media/drive/Movies:ro
+      - ${DRIVE_TV_SERIES}:/media/drive/TV:ro
+      - ${DRIVE_TEST}:/media/drive/test:ro
     restart: unless-stopped
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
@@ -118,10 +160,13 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=${TZ}
+    # Persist Bazarr config and media (read-only for media)
     volumes:
-      - ${COMMON_PATH}/appdata/bazarr:/config
-      - ${COMMON_PATH}/media/movies:/movies:ro
-      - ${COMMON_PATH}/media/tv:/tv:ro
+      - ${COMMON_PATH}/appdata/app/bazarr:/config
+      - ${MEDIA_MOVIES}:/media/Movies
+      - ${MEDIA_TV}:/media/TV
+      - ${DRIVE_MOVIES}:/media/drive/Movies
+      - ${DRIVE_TV_SERIES}:/media/drive/TV
     ports:
       - 127.0.0.1:6767:6767
     restart: unless-stopped
@@ -132,19 +177,22 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=${TZ}
+    # Persist Whisparr config and test media
     volumes:
-      - ${COMMON_PATH}/appdata/whisparr:/config
-      - ${COMMON_PATH}/media/conf:/a
+      - ${COMMON_PATH}/appdata/app/whisparr:/config
       - ${COMMON_PATH}/downloads:/downloads
+      - ${MEDIA_TEST}:/media/test
+      - ${DRIVE_TEST}:/media/drive/test:ro
     ports:
       - 127.0.0.1:6969:6969
     restart: unless-stopped
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
+    # Persist Portainer data
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ${COMMON_PATH}/appdata/portainer:/data
+      - //var/run/docker.sock:/var/run/docker.sock
+      - ${COMMON_PATH}/appdata/app/portainer:/data
     ports:
       - 127.0.0.1:9443:9443
     restart: unless-stopped
@@ -155,8 +203,9 @@ services:
       - DOZZLE_LEVEL=info
       - DOZZLE_NO_ANALYTICS=true
       - TZ=${TZ}
+    # Dozzle only needs Docker socket, no persistent data
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - //var/run/docker.sock:/var/run/docker.sock
     ports:
       - 127.0.0.1:9999:8080
     restart: unless-stopped

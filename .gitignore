@@ -1,5 +1,71 @@
-.gitignore
-.git
+# Ignore Docker and system files
+*.pid
+*.log
+*.sock
 
-# /image
-# .env
+# Ignore environment and config overrides
+.env
+.env.*
+
+# VSCode and OS files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Windows-specific
+ehthumbs.db
+Desktop.ini
+*.lnk
+
+# Docker Compose override and backup files
+docker-compose.override.yaml
+docker-compose.*.bak
+
+# SQLite and other DBs
+*.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal
+
+# Log and cache folders
+logs/
+logs/**
+cache/
+cache/**
+
+# Ignore image cache and generated images
+image/**/cache/
+image/**/thumbnails/
+
+# Ignore all local .env and secrets
+secrets.env
+*.secrets
+
+# Ignore system-specific folders
+.idea/
+.history/
+.tmp/
+.temp/
+
+# Ignore any backup or temp files
+
+downloads/**
+jellyfin/**
+media/**
+
+# Ignore runtime/data folders and all their contents recursively (use forward slashes on Windows)
+# Top-level folders — ignore everything inside them
+/appdata/
+/downloads/
+/jellyfin/
+/media/
+
+# If some subpaths in appdata should be selectively ignored instead of the whole folder,
+# add them here (example):
+# appdata/*/cache/
+# appdata/*/logs/
+
+# Ignore .env in compose_files
+compose_files/.env
+
+*.debug.txt
+*.bak
