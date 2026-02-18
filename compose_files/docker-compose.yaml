@@ -63,19 +63,6 @@ services:
     ports:
       - 9696:9696
     restart: unless-stopped
-  jackett:
-    image: lscr.io/linuxserver/jackett:latest
-    container_name: jackett
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=${TZ}
-    # Persist Jackett config
-    volumes:
-      - ${COMMON_PATH}/appdata/app/jackett:/config
-    ports:
-      - 127.0.0.1:9117:9117
-    restart: unless-stopped
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
@@ -185,29 +172,6 @@ services:
       - ${DRIVE_TEST}:/media/drive/test:ro
     ports:
       - 6969:6969
-    restart: unless-stopped
-  portainer:
-    image: portainer/portainer-ce:latest
-    container_name: portainer
-    # Persist Portainer data
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ${COMMON_PATH}/appdata/app/portainer:/data
-    ports:
-      - 127.0.0.1:9443:9443
-    restart: unless-stopped
-  dozzle:
-    image: amir20/dozzle:latest
-    container_name: dozzle
-    environment:
-      - DOZZLE_LEVEL=info
-      - DOZZLE_NO_ANALYTICS=true
-      - TZ=${TZ}
-    # Dozzle only needs Docker socket, no persistent data
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - 127.0.0.1:9999:8080
     restart: unless-stopped
   tailscale:
     image: tailscale/tailscale:latest
