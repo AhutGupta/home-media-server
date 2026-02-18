@@ -48,20 +48,21 @@ secrets.env
 
 # Ignore any backup or temp files
 
-# Ignore runtime/data folders and all their contents recursively
-appdata/**
 downloads/**
 jellyfin/**
 media/**
 
-# Ignore all database, log, and temp files in appdata and subfolders
-appdata\*
-appdata/
-appdata/**
-appdata/**/.db
-appdata/**/.log
-appdata/**/*.txt
-appdata//logs/
+# Ignore runtime/data folders and all their contents recursively (use forward slashes on Windows)
+# Top-level folders — ignore everything inside them
+/appdata/
+/downloads/
+/jellyfin/
+/media/
+
+# If some subpaths in appdata should be selectively ignored instead of the whole folder,
+# add them here (example):
+# appdata/*/cache/
+# appdata/*/logs/
 
 # Ignore .env in compose_files
 compose_files/.env
