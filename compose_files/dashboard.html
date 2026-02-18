@@ -271,7 +271,7 @@
                 <span class="service-url">/radarr/</span>
             </a>
 
-            <a href="http://localhost:8080" class="service-card" target="_blank">
+            <a href="#" class="service-card" target="_blank" data-port="8080">
                 <div class="service-header">
                     <span class="service-icon">⬇️</span>
                     <h3 class="service-title">qBittorrent</h3>
@@ -283,7 +283,7 @@
                 <span class="service-url">:8080</span>
             </a>
 
-            <a href="http://localhost:9696" class="service-card" target="_blank">
+            <a href="#" class="service-card" target="_blank" data-port="9696">
                 <div class="service-header">
                     <span class="service-icon">🔍</span>
                     <h3 class="service-title">Prowlarr</h3>
@@ -295,7 +295,7 @@
                 <span class="service-url">:9696</span>
             </a>
 
-            <a href="https://localhost:9443" class="service-card" target="_blank">
+            <a href="#" class="service-card" target="_blank" data-port="9443" data-protocol="https">
                 <div class="service-header">
                     <span class="service-icon">🐳</span>
                     <h3 class="service-title">Portainer</h3>
@@ -310,33 +310,33 @@
 
         <div class="info-section">
             <h2>📱 Mobile Apps - YES, They Work!</h2>
-            <p><strong>Your mobile apps work perfectly with Tailscale!</strong> Just use your Tailscale IP instead of localhost.</p>
+            <p><strong>Your mobile apps work perfectly!</strong> Use either your hostname <code>media-server</code> or your server's IP address.</p>
             
             <div class="app-grid">
                 <div class="app-card">
                     <h4>🎥 Jellyfin App</h4>
-                    <p><strong>Server URL:</strong> <code>http://100.x.x.x/view/</code></p>
+                    <p><strong>Server URL:</strong> <code id="jellyfin-url">http://media-server/view/</code></p>
                     <p>Available on iOS App Store and Google Play Store</p>
                 </div>
 
                 <div class="app-card">
                     <h4>🎵 Navidrome Apps</h4>
-                    <p><strong>Server URL:</strong> <code>http://100.x.x.x/music</code></p>
+                    <p><strong>Server URL:</strong> <code id="navidrome-url">http://media-server/music</code></p>
                     <p><strong>Android:</strong> Symfonium (best), Subtracks, DSub</p>
                     <p><strong>iOS:</strong> play:Sub, Amperfy</p>
                 </div>
 
                 <div class="app-card">
                     <h4>⬇️ qBittorrent Mobile</h4>
-                    <p><strong>Server URL:</strong> <code>http://100.x.x.x:8080</code></p>
+                    <p><strong>Server URL:</strong> <code id="qbittorrent-url">http://media-server:8080</code></p>
                     <p>Use any mobile browser or qBittorrent remote apps</p>
                 </div>
 
                 <div class="app-card">
-                    <h4>🔑 Getting Your IP</h4>
-                    <p>On server run:</p>
-                    <code>docker exec tailscale tailscale ip -4</code>
-                    <p>Use this IP (100.x.x.x) in all your apps!</p>
+                    <h4>🔑 Current Server</h4>
+                    <p>You're accessing:</p>
+                    <code id="current-host">Loading...</code>
+                    <p style="margin-top: 8px; font-size: 0.9em;">Use this address in your mobile apps!</p>
                 </div>
             </div>
         </div>
@@ -344,19 +344,20 @@
         <div class="info-section">
             <h2>🌐 Accessing Your Server</h2>
             
-            <h3 style="margin-top: 20px; color: #2d3748;">From Anywhere (via Tailscale)</h3>
+            <h3 style="margin-top: 20px; color: #2d3748;">Two Ways to Access</h3>
+            <ul>
+                <li><strong>Hostname:</strong> <code>http://media-server/</code> - Works on local WiFi and via Tailscale</li>
+                <li><strong>IP Address:</strong> Use your server's IP (Tailscale or local network)</li>
+                <li>All nginx-proxied services use same base URL: <code>/view/</code>, <code>/music/</code>, etc.</li>
+                <li>Direct ports add port number: <code>:8080</code>, <code>:9696</code>, etc.</li>
+            </ul>
+
+            <h3 style="margin-top: 20px; color: #2d3748;">Remote Access (via Tailscale)</h3>
             <ul>
                 <li>Install Tailscale on your device (phone, laptop, tablet)</li>
                 <li>Sign in with the same account you used on the server</li>
-                <li>Use your Tailscale IP: <code>100.x.x.x</code></li>
+                <li>Use <code>http://media-server/</code> or your Tailscale IP</li>
                 <li>No port forwarding needed - secure VPN tunnel!</li>
-            </ul>
-
-            <h3 style="margin-top: 20px; color: #2d3748;">On Local Network</h3>
-            <ul>
-                <li>Use server's local IP: <code>192.168.x.x</code></li>
-                <li>Access via nginx: <code>http://server-ip/view/</code></li>
-                <li>Or direct ports: <code>http://server-ip:8080</code></li>
             </ul>
 
             <h3 style="margin-top: 20px; color: #2d3748;">What is nginx Doing?</h3>
@@ -391,13 +392,51 @@
     </div>
 
     <script>
-        // Add simple health check status
         document.addEventListener('DOMContentLoaded', function() {
+            // Get current hostname and protocol
+            const hostname = window.location.hostname;
+            const protocol = window.location.protocol; // http: or https:
+            
+            // Update all service cards with port numbers to use current hostname
+            const portLinks = document.querySelectorAll('a.service-card[data-port]');
+            portLinks.forEach(link => {
+                const port = link.getAttribute('data-port');
+                const linkProtocol = link.getAttribute('data-protocol') || 'http';
+                // Build URL using current hostname and specified port
+                link.href = `${linkProtocol}://${hostname}:${port}`;
+            });
+            
+            // Update mobile app example URLs with current hostname
+            const currentHostUrl = `${protocol}//${hostname}`;
+            
+            // Update specific URL examples
+            const jellyfinUrl = document.getElementById('jellyfin-url');
+            if (jellyfinUrl) {
+                jellyfinUrl.textContent = `${currentHostUrl}/view/`;
+            }
+            
+            const navidromeUrl = document.getElementById('navidrome-url');
+            if (navidromeUrl) {
+                navidromeUrl.textContent = `${currentHostUrl}/music`;
+            }
+            
+            const qbittorrentUrl = document.getElementById('qbittorrent-url');
+            if (qbittorrentUrl) {
+                qbittorrentUrl.textContent = `http://${hostname}:8080`;
+            }
+            
+            const currentHost = document.getElementById('current-host');
+            if (currentHost) {
+                currentHost.textContent = currentHostUrl;
+            }
+            
             // Animate status indicator
             const indicator = document.querySelector('.status-indicator');
-            setInterval(() => {
-                indicator.style.opacity = indicator.style.opacity === '0.3' ? '1' : '0.3';
-            }, 1000);
+            if (indicator) {
+                setInterval(() => {
+                    indicator.style.opacity = indicator.style.opacity === '0.3' ? '1' : '0.3';
+                }, 1000);
+            }
         });
     </script>
 </body>
