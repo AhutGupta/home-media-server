@@ -14,6 +14,7 @@ services:
       - sonarr
       - radarr
       - whisparr
+      - navidrome
     restart: unless-stopped
   
   qbittorrent:
@@ -206,4 +207,39 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 127.0.0.1:9999:8080
+    restart: unless-stopped
+  tailscale:
+    image: tailscale/tailscale:latest
+    container_name: tailscale
+    hostname: media-server
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+      - TS_EXTRA_ARGS=--advertise-exit-node --advertise-routes=172.18.0.0/16
+    volumes:
+      - ${COMMON_PATH}/appdata/app/tailscale:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    network_mode: host
+    restart: unless-stopped
+  navidrome:
+    image: deluan/navidrome:latest
+    container_name: navidrome
+    environment:
+      - ND_LOGLEVEL=info
+      - ND_SESSIONTIMEOUT=24h
+      - ND_BASEURL=/music
+      - ND_ENABLETRANSCODINGCONFIG=true
+      - ND_TRANSCODINGCACHESIZE=150MB
+      - ND_SCANSCHEDULE=@every 1h
+      - TZ=${TZ}
+    volumes:
+      - ${COMMON_PATH}/appdata/app/navidrome:/data
+      - ${MEDIA_MUSIC}:/music/library:ro
+      - ${DRIVE_MUSIC}:/music/drive:ro
+    ports:
+      - 127.0.0.1:4533:4533
     restart: unless-stopped
