@@ -104,7 +104,6 @@ services:
       - ${COMMON_PATH}/downloads:/downloads
       - ${MEDIA_MOVIES}:/media/Movies
       - ${DRIVE_MOVIES}:/media/drive/Movies:ro
-
     ports:
       - 127.0.0.1:7878:7878
     restart: unless-stopped
@@ -132,7 +131,6 @@ services:
       - ${DRIVE_MOVIES}:/media/drive/Movies:ro
       - ${DRIVE_TV_SERIES}:/media/drive/TV:ro
       - ${DRIVE_TEST}:/media/drive/test:ro
-
     restart: unless-stopped
   jellyseerr:
     image: fallenbagel/jellyseerr:latest
@@ -191,7 +189,7 @@ services:
     container_name: portainer
     # Persist Portainer data
     volumes:
-      - //var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
       - ${COMMON_PATH}/appdata/app/portainer:/data
     ports:
       - 127.0.0.1:9443:9443
@@ -205,7 +203,7 @@ services:
       - TZ=${TZ}
     # Dozzle only needs Docker socket, no persistent data
     volumes:
-      - //var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 127.0.0.1:9999:8080
     restart: unless-stopped
