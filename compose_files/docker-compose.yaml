@@ -33,9 +33,9 @@ services:
       - ${COMMON_PATH}/appdata/app/qbittorrent:/config
       - ${COMMON_PATH}/downloads:/downloads
     ports:
-      - 127.0.0.1:8080:8080
-      - 127.0.0.1:6881:6881
-      - 127.0.0.1:6881:6881/udp
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
     restart: unless-stopped
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -61,7 +61,7 @@ services:
     volumes:
       - ${COMMON_PATH}/appdata/app/prowlarr:/config
     ports:
-      - 127.0.0.1:9696:9696
+      - 9696:9696
     restart: unless-stopped
   jackett:
     image: lscr.io/linuxserver/jackett:latest
@@ -91,7 +91,7 @@ services:
       - ${MEDIA_PERSONAL}:/media/personal
       - ${DRIVE_TV_SERIES}:/media/drive/TV:ro
     ports:
-      - 127.0.0.1:8989:8989
+      - 8989:8989
     restart: unless-stopped
   radarr:
     image: lscr.io/linuxserver/radarr:latest
@@ -107,7 +107,7 @@ services:
       - ${MEDIA_MOVIES}:/media/Movies
       - ${DRIVE_MOVIES}:/media/drive/Movies:ro
     ports:
-      - 127.0.0.1:7878:7878
+      - 7878:7878
     restart: unless-stopped
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
@@ -117,7 +117,7 @@ services:
       - PGID=1000
       - TZ=${TZ}
     ports:
-      - 127.0.0.1:8096:8096
+      - 8096:8096
       # - 8920:8920
       # - 7359:7359/udp
       # - 1900:1900/udp
@@ -184,7 +184,7 @@ services:
       - ${MEDIA_TEST}:/media/test
       - ${DRIVE_TEST}:/media/drive/test:ro
     ports:
-      - 127.0.0.1:6969:6969
+      - 6969:6969
     restart: unless-stopped
   portainer:
     image: portainer/portainer-ce:latest
@@ -242,5 +242,5 @@ services:
       - ${MEDIA_MUSIC}:/music/library:ro
       - ${DRIVE_MUSIC}:/music/drive:ro
     ports:
-      - 127.0.0.1:4533:4533
+      - 4533:4533
     restart: unless-stopped

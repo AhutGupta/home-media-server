@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Server Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .alert {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            color: #856404;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+        }
+
+        .service-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .service-icon {
+            font-size: 2em;
+            margin-right: 12px;
+        }
+
+        .service-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .service-description {
+            color: #718096;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .service-url {
+            display: inline-block;
+            background: #f7fafc;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #4a5568;
+            margin-top: 8px;
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .info-section h2 {
+            color: #2d3748;
+            margin-bottom: 16px;
+            font-size: 1.5em;
+        }
+
+        .info-section p, .info-section ul {
+            color: #4a5568;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .info-section ul {
+            list-style-position: inside;
+            padding-left: 20px;
+        }
+
+        .info-section li {
+            margin-bottom: 8px;
+        }
+
+        .category {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-bottom: 8px;
+        }
+
+        .category.media { background: #48bb78; }
+        .category.download { background: #ed8936; }
+        .category.management { background: #4299e1; }
+        .category.admin { background: #9f7aea; }
+
+        footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            margin-top: 40px;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            background: #48bb78;
+            box-shadow: 0 0 8px rgba(72, 187, 120, 0.6);
+        }
+
+        code {
+            background: #f7fafc;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #e53e3e;
+        }
+
+        .security-badge {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎬 Media Server Dashboard</h1>
+            <p class="subtitle">Your Personal Entertainment Hub</p>
+            <p style="margin-top: 10px;"><span class="security-badge">🔒 SECURE</span> Access restricted to WiFi & Tailscale only</p>
+        </header>
+
+        <div class="alert alert-success">
+            <strong>✅ Security Verified:</strong> All services are localhost-bound. Only accessible via your WiFi network or Tailscale VPN. No external access possible.
+        </div>
+
+        <div class="services-grid">
+            <a href="/view/" class="service-card">
+                <div class="service-header">
+                    <span class="service-icon">🎥</span>
+                    <h3 class="service-title">Jellyfin</h3>
+                </div>
+                <span class="category media">Media Streaming</span>
+                <p class="service-description">
+                    Stream your movies and TV shows. Access from any device with the Jellyfin app.
+                </p>
+                <span class="service-url">/view/</span>
+            </a>
+
+            <a href="/music/" class="service-card">
+                <div class="service-header">
+                    <span class="service-icon">🎵</span>
+                    <h3 class="service-title">Navidrome</h3>
+                </div>
+                <span class="category media">Music Streaming</span>
+                <p class="service-description">
+                    Your personal music library. Compatible with Subsonic apps like Symfonium and play:Sub.
+                </p>
+                <span class="service-url">/music/</span>
+            </a>
+
+            <a href="/request/" class="service-card">
+                <div class="service-header">
+                    <span class="service-icon">📝</span>
+                    <h3 class="service-title">Jellyseerr</h3>
+                </div>
+                <span class="category media">Content Requests</span>
+                <p class="service-description">
+                    Request new movies and TV shows. Automatically downloaded and added to your library.
+                </p>
+                <span class="service-url">/request/</span>
+            </a>
+
+            <a href="/sonarr/" class="service-card">
+                <div class="service-header">
+                    <span class="service-icon">📺</span>
+                    <h3 class="service-title">Sonarr</h3>
+                </div>
+                <span class="category management">TV Management</span>
+                <p class="service-description">
+                    Automatic TV show downloads. Monitors, searches, and organizes your series.
+                </p>
+                <span class="service-url">/sonarr/</span>
+            </a>
+
+            <a href="/radarr/" class="service-card">
+                <div class="service-header">
+                    <span class="service-icon">🎬</span>
+                    <h3 class="service-title">Radarr</h3>
+                </div>
+                <span class="category management">Movie Management</span>
+                <p class="service-description">
+                    Automatic movie downloads. Searches, monitors, and upgrades your movie collection.
+                </p>
+                <span class="service-url">/radarr/</span>
+            </a>
+
+            <a href="#" class="service-card" data-service="qbittorrent">
+                <div class="service-header">
+                    <span class="service-icon">⬇️</span>
+                    <h3 class="service-title">qBittorrent</h3>
+                </div>
+                <span class="category download">Torrent Client</span>
+                <p class="service-description">
+                    Manage your downloads. Default login: admin/adminadmin (change this!)
+                </p>
+                <span class="service-url">Direct port :8080</span>
+            </a>
+
+            <a href="#" class="service-card" data-service="prowlarr">
+                <div class="service-header">
+                    <span class="service-icon">🔍</span>
+                    <h3 class="service-title">Prowlarr</h3>
+                </div>
+                <span class="category management">Indexer Manager</span>
+                <p class="service-description">
+                    Manage torrent trackers. Syncs indexers to Sonarr and Radarr automatically.
+                </p>
+                <span class="service-url">Direct port :9696</span>
+            </a>
+
+            <a href="#" class="service-card" data-service="portainer">
+                <div class="service-header">
+                    <span class="service-icon">🐳</span>
+                    <h3 class="service-title">Portainer</h3>
+                </div>
+                <span class="category admin">Docker Management</span>
+                <p class="service-description">
+                    Manage Docker containers. View logs, stats, and control all services.
+                </p>
+                <span class="service-url">Direct port :9443 (HTTPS)</span>
+            </a>
+        </div>
+
+        <div class="info-section">
+            <h2>🔒 Security Status - Your Setup is SAFE!</h2>
+            
+            <div class="alert alert-success">
+                <strong>✅ All Critical Services Protected</strong><br>
+                Your media server is configured with security best practices. All services are bound to localhost (127.0.0.1) and only accessible through:
+                <ul style="margin-top: 10px;">
+                    <li><strong>Local WiFi Network:</strong> Anyone on your WiFi can access through nginx (port 80)</li>
+                    <li><strong>Tailscale VPN:</strong> Secure encrypted tunnel for remote access</li>
+                </ul>
+            </div>
+
+            <h3 style="margin-top: 20px; color: #2d3748;">Port Bindings (Verified Secure)</h3>
+            <ul>
+                <li>✅ <strong>nginx:</strong> 0.0.0.0:80 - Public on local network (safe, reverse proxy only)</li>
+                <li>✅ <strong>qBittorrent:</strong> 127.0.0.1:8080 - Localhost ONLY</li>
+                <li>✅ <strong>Prowlarr:</strong> 127.0.0.1:9696 - Localhost ONLY</li>
+                <li>✅ <strong>Sonarr:</strong> 127.0.0.1:8989 - Localhost ONLY</li>
+                <li>✅ <strong>Radarr:</strong> 127.0.0.1:7878 - Localhost ONLY</li>
+                <li>✅ <strong>Jellyfin:</strong> 127.0.0.1:8096 - Localhost ONLY</li>
+                <li>✅ <strong>Navidrome:</strong> 127.0.0.1:4533 - Localhost ONLY</li>
+                <li>✅ <strong>Portainer:</strong> 127.0.0.1:9443 - Localhost ONLY</li>
+            </ul>
+
+            <h3 style="margin-top: 20px; color: #2d3748;">What This Means</h3>
+            <p><strong>Nobody can access your media server from the internet</strong> unless they:</p>
+            <ol style="padding-left: 20px;">
+                <li>Are connected to your WiFi network, OR</li>
+                <li>Are connected to your Tailscale VPN</li>
+            </ol>
+            <p style="margin-top: 10px;"><strong>Even port forwarding wouldn't expose these services</strong> because they're bound to localhost!</p>
+        </div>
+
+        <div class="info-section">
+            <h2>📱 How to Access</h2>
+            
+            <h3 style="margin-top: 20px; color: #2d3748;">From This Computer (Localhost)</h3>
+            <p>The nginx-proxied services (Jellyfin, Navidrome, Sonarr, Radarr) work via the links above.</p>
+            <p><strong>Direct port services</strong> (qBittorrent, Prowlarr, Portainer) need localhost access:</p>
+            <ul>
+                <li>qBittorrent: <code>http://localhost:8080</code></li>
+                <li>Prowlarr: <code>http://localhost:9696</code></li>
+                <li>Portainer: <code>https://localhost:9443</code></li>
+            </ul>
+
+            <h3 style="margin-top: 20px; color: #2d3748;">From Other Devices (WiFi/Tailscale)</h3>
+            <p>Use your server's hostname or IP address:</p>
+            <ul>
+                <li><strong>Hostname:</strong> <code>http://media-server/view/</code></li>
+                <li><strong>Local IP:</strong> <code>http://192.168.x.x/view/</code></li>
+                <li><strong>Tailscale IP:</strong> <code>http://100.x.x.x/view/</code></li>
+            </ul>
+            <p><strong>Note:</strong> Direct port services (qBittorrent, Prowlarr, Portainer) are NOT accessible from other devices for security. Use the proxied services above.</p>
+
+            <h3 style="margin-top: 20px; color: #2d3748;">Mobile Apps</h3>
+            <p><strong>Jellyfin App:</strong> <code id="jellyfin-url">http://your-server/view/</code></p>
+            <p><strong>Navidrome Apps:</strong> <code id="navidrome-url">http://your-server/music</code></p>
+            <p style="font-size: 0.9em; color: #718096; margin-top: 10px;">Replace "your-server" with your hostname or IP address</p>
+        </div>
+
+        <div class="info-section">
+            <h2>🛠️ Troubleshooting</h2>
+            <ul>
+                <li><strong>Links not working?</strong> Make sure you're using <code>http://localhost/</code> or <code>http://media-server/</code> to access this dashboard</li>
+                <li><strong>Can't access from phone?</strong> Ensure Tailscale is running and connected on your phone</li>
+                <li><strong>Services not loading?</strong> Check if containers are running: <code>docker ps</code></li>
+                <li><strong>Need direct port access?</strong> Only works from the server machine itself via localhost</li>
+            </ul>
+        </div>
+
+        <footer>
+            <p>🚀 Powered by Docker • Secured by Tailscale • Proxied by nginx</p>
+            <p style="margin-top: 8px; font-size: 0.9em;">
+                <span class="status-indicator"></span> All systems operational
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get current hostname and protocol
+            const hostname = window.location.hostname;
+            const protocol = window.location.protocol; // http: or https:
+            
+            // Update direct port service links for non-localhost access
+            // These are only accessible from the server machine via localhost
+            const directServices = {
+                'qbittorrent': { port: 8080, protocol: 'http' },
+                'prowlarr': { port: 9696, protocol: 'http' },
+                'portainer': { port: 9443, protocol: 'https' }
+            };
+            
+            document.querySelectorAll('[data-service]').forEach(link => {
+                const service = link.getAttribute('data-service');
+                const config = directServices[service];
+                
+                if (config) {
+                    // If accessing from localhost/127.0.0.1, link directly
+                    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+                        link.href = `${config.protocol}://localhost:${config.port}`;
+                        link.target = '_blank';
+                    } else {
+                        // From other devices, show info message
+                        link.onclick = function(e) {
+                            e.preventDefault();
+                            alert(`${service} is only accessible from the server machine at:\n${config.protocol}://localhost:${config.port}\n\nThis is for security - these services are bound to localhost only.`);
+                        };
+                    }
+                }
+            });
+            
+            // Update mobile app example URLs
+            const currentHostUrl = `${protocol}//${hostname}`;
+            
+            const jellyfinUrl = document.getElementById('jellyfin-url');
+            if (jellyfinUrl && hostname !== 'localhost' && hostname !== '127.0.0.1') {
+                jellyfinUrl.textContent = `${currentHostUrl}/view/`;
+            }
+            
+            const navidromeUrl = document.getElementById('navidrome-url');
+            if (navidromeUrl && hostname !== 'localhost' && hostname !== '127.0.0.1') {
+                navidromeUrl.textContent = `${currentHostUrl}/music`;
+            }
+            
+            // Animate status indicator
+            const indicator = document.querySelector('.status-indicator');
+            if (indicator) {
+                setInterval(() => {
+                    indicator.style.opacity = indicator.style.opacity === '0.3' ? '1' : '0.3';
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
+
+        .info-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .info-section h2 {
+            color: #2d3748;
+            margin-bottom: 16px;
+            font-size: 1.5em;
+        }
+
+        .info-section p, .info-section ul {
+            color: #4a5568;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .info-section ul {
+            list-style-position: inside;
+            padding-left: 20px;
+        }
+
+        .info-section li {
+            margin-bottom: 8px;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .app-card {
+            background: #f7fafc;
+            padding: 16px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .app-card h4 {
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .app-card p {
+            font-size: 0.9em;
+            color: #718096;
+        }
+
+        .category {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-bottom: 8px;
+        }
+
+        .category.media { background: #48bb78; }
+        .category.download { background: #ed8936; }
+        .category.management { background: #4299e1; }
+        .category.admin { background: #9f7aea; }
+
+        footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            margin-top: 40px;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            background: #48bb78;
+            box-shadow: 0 0 8px rgba(72, 187, 120, 0.6);
+        }
+
+        code {
+            background: #f7fafc;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #e53e3e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎬 Media Server Dashboard</h1>
+            <p class="subtitle">Your Personal Entertainment Hub</p>
+        </header>
+
+        <div class="services-grid">
+            <a href="/view/" class="service-card">
+                <div class="service-header">
+                    <span class="service-icon">🎥</span>
+                    <h3 class="service-title">Jellyfin</h3>
+                </div>
+                <span class="category media">Media Streaming</span>
+                <p class="service-description">
+                    Stream your movies and TV shows. Access from any device with the Jellyfin app.
+                </p>
+                <span class="service-url">/view/</span>
+            </a>
+
+            <a href="/music/" class="service-card">
+                <div class="service-header">
+                    <span class="service-icon">🎵</span>
+                    <h3 class="service-title">Navidrome</h3>
+                </div>
+                <span class="category media">Music Streaming</span>
+                <p class="service-description">
+                    Your personal music library. Compatible with Subsonic apps like Symfonium and play:Sub.
+                </p>
+                <span class="service-url">/music/</span>
+            </a>
+
+            <a href="/request/" class="service-card">
+                <div class="service-header">
+                    <span class="service-icon">📝</span>
+                    <h3 class="service-title">Jellyseerr</h3>
+                </div>
+                <span class="category media">Content Requests</span>
+                <p class="service-description">
+                    Request new movies and TV shows. Automatically downloaded and added to your library.
+                </p>
+                <span class="service-url">/request/</span>
+            </a>
+
+            <a href="/sonarr/" class="service-card">
+                <div class="service-header">
+                    <span class="service-icon">📺</span>
+                    <h3 class="service-title">Sonarr</h3>
+                </div>
+                <span class="category management">TV Management</span>
+                <p class="service-description">
+                    Automatic TV show downloads. Monitors, searches, and organizes your series.
+                </p>
+                <span class="service-url">/sonarr/</span>
+            </a>
+
+            <a href="/radarr/" class="service-card">
+                <div class="service-header">
+                    <span class="service-icon">🎬</span>
+                    <h3 class="service-title">Radarr</h3>
+                </div>
+                <span class="category management">Movie Management</span>
+                <p class="service-description">
+                    Automatic movie downloads. Searches, monitors, and upgrades your movie collection.
+                </p>
+                <span class="service-url">/radarr/</span>
+            </a>
+
+            <a href="#" class="service-card" target="_blank" data-port="8080">
+                <div class="service-header">
+                    <span class="service-icon">⬇️</span>
+                    <h3 class="service-title">qBittorrent</h3>
+                </div>
+                <span class="category download">Torrent Client</span>
+                <p class="service-description">
+                    Manage your downloads. Default login: admin/adminadmin (change this!)
+                </p>
+                <span class="service-url">:8080</span>
+            </a>
+
+            <a href="#" class="service-card" target="_blank" data-port="9696">
+                <div class="service-header">
+                    <span class="service-icon">🔍</span>
+                    <h3 class="service-title">Prowlarr</h3>
+                </div>
+                <span class="category management">Indexer Manager</span>
+                <p class="service-description">
+                    Manage torrent trackers. Syncs indexers to Sonarr and Radarr automatically.
+                </p>
+                <span class="service-url">:9696</span>
+            </a>
+
+            <a href="#" class="service-card" target="_blank" data-port="9443" data-protocol="https">
+                <div class="service-header">
+                    <span class="service-icon">🐳</span>
+                    <h3 class="service-title">Portainer</h3>
+                </div>
+                <span class="category admin">Docker Management</span>
+                <p class="service-description">
+                    Manage Docker containers. View logs, stats, and control all services.
+                </p>
+                <span class="service-url">:9443</span>
+            </a>
+        </div>
+
+        <div class="info-section">
+            <h2>📱 Mobile Apps - YES, They Work!</h2>
+            <p><strong>Your mobile apps work perfectly!</strong> Use either your hostname <code>media-server</code> or your server's IP address.</p>
+            
+            <div class="app-grid">
+                <div class="app-card">
+                    <h4>🎥 Jellyfin App</h4>
+                    <p><strong>Server URL:</strong> <code id="jellyfin-url">http://media-server/view/</code></p>
+                    <p>Available on iOS App Store and Google Play Store</p>
+                </div>
+
+                <div class="app-card">
+                    <h4>🎵 Navidrome Apps</h4>
+                    <p><strong>Server URL:</strong> <code id="navidrome-url">http://media-server/music</code></p>
+                    <p><strong>Android:</strong> Symfonium (best), Subtracks, DSub</p>
+                    <p><strong>iOS:</strong> play:Sub, Amperfy</p>
+                </div>
+
+                <div class="app-card">
+                    <h4>⬇️ qBittorrent Mobile</h4>
+                    <p><strong>Server URL:</strong> <code id="qbittorrent-url">http://media-server:8080</code></p>
+                    <p>Use any mobile browser or qBittorrent remote apps</p>
+                </div>
+
+                <div class="app-card">
+                    <h4>🔑 Current Server</h4>
+                    <p>You're accessing:</p>
+                    <code id="current-host">Loading...</code>
+                    <p style="margin-top: 8px; font-size: 0.9em;">Use this address in your mobile apps!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2>🌐 Accessing Your Server</h2>
+            
+            <h3 style="margin-top: 20px; color: #2d3748;">Two Ways to Access</h3>
+            <ul>
+                <li><strong>Hostname:</strong> <code>http://media-server/</code> - Works on local WiFi and via Tailscale</li>
+                <li><strong>IP Address:</strong> Use your server's IP (Tailscale or local network)</li>
+                <li>All nginx-proxied services use same base URL: <code>/view/</code>, <code>/music/</code>, etc.</li>
+                <li>Direct ports add port number: <code>:8080</code>, <code>:9696</code>, etc.</li>
+            </ul>
+
+            <h3 style="margin-top: 20px; color: #2d3748;">Remote Access (via Tailscale)</h3>
+            <ul>
+                <li>Install Tailscale on your device (phone, laptop, tablet)</li>
+                <li>Sign in with the same account you used on the server</li>
+                <li>Use <code>http://media-server/</code> or your Tailscale IP</li>
+                <li>No port forwarding needed - secure VPN tunnel!</li>
+            </ul>
+
+            <h3 style="margin-top: 20px; color: #2d3748;">What is nginx Doing?</h3>
+            <p>nginx is your <strong>smart gateway</strong> that:</p>
+            <ul>
+                <li>✅ Routes all services through a single port (80)</li>
+                <li>✅ Adds security headers to protect against attacks</li>
+                <li>✅ Enables WebSocket support for real-time features</li>
+                <li>✅ Provides this beautiful dashboard you're seeing!</li>
+                <li>✅ Can add SSL/HTTPS, caching, rate limiting, and more</li>
+            </ul>
+        </div>
+
+        <div class="info-section">
+            <h2>💡 Quick Tips</h2>
+            <ul>
+                <li><strong>First Time Setup:</strong> Visit each service to create admin accounts</li>
+                <li><strong>Security:</strong> Change default passwords immediately (especially qBittorrent!)</li>
+                <li><strong>Storage:</strong> All media is stored on your E: and F: drives</li>
+                <li><strong>Downloads:</strong> qBittorrent saves to configured download folders</li>
+                <li><strong>Automation:</strong> Sonarr/Radarr automatically manage downloads</li>
+                <li><strong>Updates:</strong> Run <code>docker-compose pull && docker-compose up -d</code></li>
+            </ul>
+        </div>
+
+        <footer>
+            <p>🚀 Powered by Docker • Secured by Tailscale • Proxied by nginx</p>
+            <p style="margin-top: 8px; font-size: 0.9em;">
+                <span class="status-indicator"></span> All systems operational
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get current hostname and protocol
+            const hostname = window.location.hostname;
+            const protocol = window.location.protocol; // http: or https:
+            
+            // Update all service cards with port numbers to use current hostname
+            const portLinks = document.querySelectorAll('a.service-card[data-port]');
+            portLinks.forEach(link => {
+                const port = link.getAttribute('data-port');
+                const linkProtocol = link.getAttribute('data-protocol') || 'http';
+                // Build URL using current hostname and specified port
+                link.href = `${linkProtocol}://${hostname}:${port}`;
+            });
+            
+            // Update mobile app example URLs with current hostname
+            const currentHostUrl = `${protocol}//${hostname}`;
+            
+            // Update specific URL examples
+            const jellyfinUrl = document.getElementById('jellyfin-url');
+            if (jellyfinUrl) {
+                jellyfinUrl.textContent = `${currentHostUrl}/view/`;
+            }
+            
+            const navidromeUrl = document.getElementById('navidrome-url');
+            if (navidromeUrl) {
+                navidromeUrl.textContent = `${currentHostUrl}/music`;
+            }
+            
+            const qbittorrentUrl = document.getElementById('qbittorrent-url');
+            if (qbittorrentUrl) {
+                qbittorrentUrl.textContent = `http://${hostname}:8080`;
+            }
+            
+            const currentHost = document.getElementById('current-host');
+            if (currentHost) {
+                currentHost.textContent = currentHostUrl;
+            }
+            
+            // Animate status indicator
+            const indicator = document.querySelector('.status-indicator');
+            if (indicator) {
+                setInterval(() => {
+                    indicator.style.opacity = indicator.style.opacity === '0.3' ? '1' : '0.3';
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
