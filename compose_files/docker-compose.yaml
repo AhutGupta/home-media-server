@@ -8,6 +8,7 @@ services:
       - 80:80
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./dashboard.html:/etc/nginx/html/dashboard.html:ro
     depends_on:
       - jellyfin
       - jellyseerr
