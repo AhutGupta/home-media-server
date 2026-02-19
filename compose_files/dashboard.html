@@ -139,9 +139,10 @@
         <div class="info-box">
             <h3>📡 Access Information</h3>
             <p>
-                <strong>Local Access:</strong> Use <code>localhost:PORT</code> or <code>media-server:PORT</code> from your network.<br>
-                <strong>Quick Links:</strong> Dashboard shortcuts like <code>/view</code> will redirect to the correct port.<br>
-                <strong>Tailscale:</strong> Access via your Tailscale IP with the same ports.
+                <strong>From Server Machine:</strong> Use <code>localhost:PORT</code> (e.g., <code>localhost:8096</code>)<br>
+                <strong>From WiFi Network:</strong> Use <code>media-server:PORT</code> (e.g., <code>media-server:8096</code>)<br>
+                <strong>Via Tailscale VPN:</strong> Use <code>100.x.x.x:PORT</code> (e.g., <code>100.64.1.5:8096</code>)<br>
+                <strong>Quick Links:</strong> Dashboard shortcuts like <code>/view</code> redirect to the correct port.
             </p>
         </div>
 
@@ -277,15 +278,36 @@
                     <a href="/prowlarr" class="service-link">Open Prowlarr</a>
                     <span class="port-info">:9696</span>
                 </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-icon">📊</span>
+                        <h3 class="service-title">Dozzle</h3>
+                    </div>
+                    <p class="service-description">
+                        Centralized Docker container log viewer. Monitor all services in real-time.
+                    </p>
+                    <a href="/logs" class="service-link">Open Dozzle</a>
+                    <span class="port-info">:8888</span>
+                </div>
             </div>
         </div>
 
         <div class="info-box">
             <h3>📱 Mobile Apps</h3>
             <p>
-                <strong>Jellyfin:</strong> Use server address <code>http://media-server:8096</code> or <code>http://YOUR_TAILSCALE_IP:8096</code><br>
-                <strong>Music Apps (Navidrome):</strong> Symfonium (Android), play:Sub (iOS) - Server: <code>http://media-server:4533</code><br>
-                <strong>qBittorrent:</strong> qBittorrent Remote app - Server: <code>http://media-server:8080</code>
+                <strong>Jellyfin:</strong> Use server address:<br>
+                • From Server: <code>http://localhost:8096</code><br>
+                • From WiFi: <code>http://media-server:8096</code><br>
+                • Via Tailscale: <code>http://100.x.x.x:8096</code> (your Tailscale IP)<br>
+                <br>
+                <strong>Music Apps (Navidrome):</strong> Symfonium (Android), play:Sub (iOS)<br>
+                • From WiFi: <code>http://media-server:4533</code><br>
+                • Via Tailscale: <code>http://100.x.x.x:4533</code><br>
+                <br>
+                <strong>qBittorrent:</strong> qBittorrent Remote app<br>
+                • From WiFi: <code>http://media-server:8080</code><br>
+                • Via Tailscale: <code>http://100.x.x.x:8080</code>
             </p>
         </div>
 
