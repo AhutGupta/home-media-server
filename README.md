@@ -29,13 +29,14 @@ http://localhost/
 ## What's Included
 
 ### Core Services
-- **Jellyfin** (8096) - Stream movies, TV shows, and personal media
+- **Jellyfin** (8096) - Stream movies, TV shows, music, audiobooks, and podcasts
 - **Navidrome** (4533) - Personal music streaming server
-- **nginx** (80) - Reverse proxy and dashboard
+- **nginx** (80) - Lightweight dashboard with quick links
 
 ### Content Management
 - **Sonarr** (8989) - Automated TV show downloads
 - **Radarr** (7878) - Automated movie downloads
+- **Lidarr** (8686) - Automated music downloads with ID3 tagging
 - **Whisparr** (6969) - Adult content management (optional)
 - **Bazarr** (6767) - Automatic subtitle downloads
 
@@ -63,15 +64,26 @@ http://localhost:8080/    # qBittorrent
 http://media-server:8096/    # Jellyfin
 http://media-server:7878/    # Radarr
 http://media-server:8989/    # Sonarr
+http://media-server:8686/    # Lidarr
+http://media-server:8080/    # qBittorrent
 ```
 
 ### Tailscale (Remote via VPN)
+Use the same port-based URLs with your Tailscale IP:
 ```
-http://media-server/view/      # Jellyfin
-http://media-server/movies/    # Radarr
-http://media-server/tv/        # Sonarr
-http://media-server/music/     # Navidrome
-http://media-server/torrent/   # qBittorrent
+http://100.x.x.x:8096/    # Jellyfin
+http://100.x.x.x:7878/    # Radarr
+http://100.x.x.x:8989/    # Sonarr
+```
+
+Or use the dashboard quick links (redirects to correct port):
+```
+http://100.x.x.x/view      # → Jellyfin :8096
+http://100.x.x.x/movies    # → Radarr :7878
+http://100.x.x.x/tv        # → Sonarr :8989
+http://100.x.x.x/lidarr    # → Lidarr :8686
+http://100.x.x.x/music     # → Navidrome :4533
+http://100.x.x.x/torrent   # → qBittorrent :8080
 ```
 
 ## Installation
@@ -157,13 +169,28 @@ http://media-server/torrent/   # qBittorrent
    - Category: `movies`
 4. Settings → Indexers → Add Prowlarr (auto-configured)
 
+### Lidarr (Music)
+1. Open `http://localhost:8686`
+2. Settings → Media Management → Root Folder: `/media/Music`
+3. Settings → Download Clients → Add qBittorrent:
+   - Host: `qbittorrent`
+   - Port: `8080`
+   - Category: `music`
+4. Settings → Indexers → Add Prowlarr (auto-configured)
+5. Settings → Metadata → Enable ID3 tagging
+6. Add music artists and albums
+
 ### Jellyfin
 1. Open `http://localhost:8096`
 2. Complete initial setup wizard
 3. Add libraries:
    - Movies: `/media/Movies`
    - TV Shows: `/media/TV`
-   - Music: `/music/library` (if using Navidrome path)
+   - Music: `/media/Music` (for music, audiobooks, podcasts)
+4. For music library:
+   - Enable "Fetch images from Music Brainz"
+   - Enable "Fetch metadata from Music Brainz"
+   - Set content type to Music, Audiobooks, or Podcasts as appropriate
 
 ### Jellyseerr (Requests)
 1. Open via Tailscale: `http://media-server/request/`

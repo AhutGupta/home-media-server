@@ -16,6 +16,7 @@ services:
       - radarr
       - whisparr
       - navidrome
+      - lidarr
     restart: unless-stopped
   
   qbittorrent:
@@ -96,6 +97,22 @@ services:
     ports:
       - 7878:7878
     restart: unless-stopped
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    # Persist Lidarr config and music
+    volumes:
+      - ${COMMON_PATH}/appdata/app/lidarr:/config
+      - ${COMMON_PATH}/downloads:/downloads
+      - ${MEDIA_MUSIC}:/media/Music
+      - ${DRIVE_MUSIC}:/media/drive/Music:ro
+    ports:
+      - 8686:8686
+    restart: unless-stopped
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
     container_name: jellyfin
@@ -116,9 +133,11 @@ services:
       - ${MEDIA_MOVIES}:/media/Movies:ro
       - ${MEDIA_TV}:/media/TV:ro
       - ${MEDIA_PERSONAL}:/media/Personal:ro
+      - ${MEDIA_MUSIC}:/media/Music:ro
       - ${MEDIA_TEST}:/media/test:ro
       - ${DRIVE_MOVIES}:/media/drive/Movies:ro
       - ${DRIVE_TV_SERIES}:/media/drive/TV:ro
+      - ${DRIVE_MUSIC}:/media/drive/Music:ro
       - ${DRIVE_TEST}:/media/drive/test:ro
     restart: unless-stopped
   jellyseerr:
@@ -196,7 +215,6 @@ services:
     environment:
       - ND_LOGLEVEL=info
       - ND_SESSIONTIMEOUT=24h
-      - ND_BASEURL=/music
       - ND_ENABLETRANSCODINGCONFIG=true
       - ND_TRANSCODINGCACHESIZE=150MB
       - ND_SCANSCHEDULE=@every 1h

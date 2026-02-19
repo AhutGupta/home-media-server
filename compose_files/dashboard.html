@@ -3,411 +3,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Media Server Dashboard</title>
+    <title>Home Media Server</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
-            color: #333;
         }
-
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
         }
-
-        header {
+        .header {
             text-align: center;
-            margin-bottom: 40px;
             color: white;
+            margin-bottom: 40px;
         }
-
-        h1 {
-            font-size: 2.5em;
+        .header h1 {
+            font-size: 3em;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
-
-        .subtitle {
+        .header p {
             font-size: 1.2em;
             opacity: 0.9;
         }
-
-        .alert {
-            background: #d1ecf1;
-            border: 2px solid #0c5460;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            color: #0c5460;
-        }
-
-        .alert h3 {
-            margin-bottom: 10px;
-        }
-
-        .access-table {
-            width: 100%;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            margin: 20px 0;
-        }
-
-        .access-table th,
-        .access-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .access-table th {
-            background: #4299e1;
-            color: white;
-            font-weight: 600;
-        }
-
-        .access-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .services-grid {
+        .services {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
-
         .service-card {
             background: white;
             border-radius: 12px;
             padding: 24px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+        }
         .service-header {
             display: flex;
             align-items: center;
             margin-bottom: 12px;
         }
-
         .service-icon {
             font-size: 2em;
             margin-right: 12px;
         }
-
         .service-title {
-            font-size: 1.4em;
-            font-weight: 600;
-            color: #2d3748;
+            font-size: 1.5em;
+            color: #333;
         }
-
         .service-description {
-            color: #718096;
+            color: #666;
             margin-bottom: 16px;
             line-height: 1.5;
         }
-
-        .access-methods {
-            margin-top: 16px;
-        }
-
-        .access-method {
-            padding: 8px 12px;
-            margin: 4px 0;
+        .service-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
             border-radius: 6px;
-            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        .service-link:hover {
+            opacity: 0.9;
+        }
+        .port-info {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 4px 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
             font-size: 0.9em;
+            color: #666;
+            font-family: 'Courier New', monospace;
         }
-
-        .local-access {
-            background: #c6f6d5;
-            color: #22543d;
-        }
-
-        .tailscale-access {
-            background: #bee3f8;
-            color: #2c5282;
-        }
-
-        .info-section {
+        .category {
             background: white;
             border-radius: 12px;
             padding: 24px;
+            margin-bottom: 20px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .category-title {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #667eea;
+        }
+        .info-box {
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 16px;
+            border-radius: 6px;
             margin-bottom: 20px;
         }
-
-        .info-section h2 {
-            color: #2d3748;
-            margin-bottom: 16px;
-            font-size: 1.5em;
-        }
-
-        .info-section ul {
-            list-style-position: inside;
-            padding-left: 20px;
-        }
-
-        .info-section li {
+        .info-box h3 {
+            color: #f57c00;
             margin-bottom: 8px;
+        }
+        .info-box p {
+            color: #666;
             line-height: 1.6;
         }
-
-        code {
-            background: #f7fafc;
+        .info-box code {
+            background: #ffe0b2;
             padding: 2px 6px;
-            border-radius: 4px;
+            border-radius: 3px;
             font-family: 'Courier New', monospace;
-            color: #e53e3e;
-        }
-
-        footer {
-            text-align: center;
-            color: white;
-            opacity: 0.8;
-            margin-top: 40px;
-            padding: 20px;
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2em;
-            }
-            
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>🎬 Media Server Dashboard</h1>
-            <p class="subtitle">Your Personal Entertainment Hub</p>
-        </header>
-
-        <div class="alert">
-            <h3>📡 How to Access Your Services</h3>
-            <table class="access-table">
-                <thead>
-                    <tr>
-                        <th>Access Method</th>
-                        <th>URL Pattern</th>
-                        <th>Example</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Localhost</strong><br>(Same machine)</td>
-                        <td><code>http://localhost:PORT/</code></td>
-                        <td><code>http://localhost:7878/</code></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Network</strong><br>(Same WiFi)</td>
-                        <td><code>http://media-server:PORT/</code></td>
-                        <td><code>http://media-server:7878/</code></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Tailscale</strong><br>(Remote via VPN)</td>
-                        <td><code>http://media-server/PATH/</code></td>
-                        <td><code>http://media-server/movies/</code></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="header">
+            <h1>🎬 Home Media Server</h1>
+            <p>Your Personal Media Hub</p>
         </div>
 
-        <div class="services-grid">
-            <div class="service-card">
-                <div class="service-header">
-                    <span class="service-icon">🎥</span>
-                    <h3 class="service-title">Jellyfin</h3>
-                </div>
-                <p class="service-description">
-                    Stream your movies and TV shows from anywhere.
-                </p>
-                <div class="access-methods">
-                    <div class="access-method local-access">
-                        <strong>Local:</strong> <a href="http://localhost:8096/" target="_blank">localhost:8096</a> | <a href="http://media-server:8096/" target="_blank">media-server:8096</a>
-                    </div>
-                    <div class="access-method tailscale-access">
-                        <strong>Tailscale:</strong> <a href="/view/">/view/</a>
-                    </div>
-                </div>
-            </div>
+        <div class="info-box">
+            <h3>📡 Access Information</h3>
+            <p>
+                <strong>Local Access:</strong> Use <code>localhost:PORT</code> or <code>media-server:PORT</code> from your network.<br>
+                <strong>Quick Links:</strong> Dashboard shortcuts like <code>/view</code> will redirect to the correct port.<br>
+                <strong>Tailscale:</strong> Access via your Tailscale IP with the same ports.
+            </p>
+        </div>
 
-            <div class="service-card">
-                <div class="service-header">
-                    <span class="service-icon">🎵</span>
-                    <h3 class="service-title">Navidrome</h3>
-                </div>
-                <p class="service-description">
-                    Your personal music streaming server.
-                </p>
-                <div class="access-methods">
-                    <div class="access-method local-access">
-                        <strong>Local:</strong> <a href="http://localhost:4533/" target="_blank">localhost:4533</a> | <a href="http://media-server:4533/" target="_blank">media-server:4533</a>
+        <div class="category">
+            <h2 class="category-title">🎥 Media Streaming</h2>
+            <div class="services">
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-icon">🎬</span>
+                        <h3 class="service-title">Jellyfin</h3>
                     </div>
-                    <div class="access-method tailscale-access">
-                        <strong>Tailscale:</strong> <a href="/music/">/music/</a>
-                    </div>
+                    <p class="service-description">
+                        Stream movies, TV shows, music, audiobooks, and podcasts. Your complete media library.
+                    </p>
+                    <a href="/view" class="service-link">Open Jellyfin</a>
+                    <span class="port-info">:8096</span>
                 </div>
-            </div>
 
-            <div class="service-card">
-                <div class="service-header">
-                    <span class="service-icon">📺</span>
-                    <h3 class="service-title">Sonarr</h3>
-                </div>
-                <p class="service-description">
-                    Automatic TV show downloads and management.
-                </p>
-                <div class="access-methods">
-                    <div class="access-method local-access">
-                        <strong>Local:</strong> <a href="http://localhost:8989/" target="_blank">localhost:8989</a> | <a href="http://media-server:8989/" target="_blank">media-server:8989</a>
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-icon">🎵</span>
+                        <h3 class="service-title">Navidrome</h3>
                     </div>
-                    <div class="access-method tailscale-access">
-                        <strong>Tailscale:</strong> <a href="/tv/">/tv/</a>
-                    </div>
+                    <p class="service-description">
+                        Dedicated music streaming server with subsonic API support.
+                    </p>
+                    <a href="/music" class="service-link">Open Navidrome</a>
+                    <span class="port-info">:4533</span>
                 </div>
-            </div>
 
-            <div class="service-card">
-                <div class="service-header">
-                    <span class="service-icon">🎬</span>
-                    <h3 class="service-title">Radarr</h3>
-                </div>
-                <p class="service-description">
-                    Automatic movie downloads and management.
-                </p>
-                <div class="access-methods">
-                    <div class="access-method local-access">
-                        <strong>Local:</strong> <a href="http://localhost:7878/" target="_blank">localhost:7878</a> | <a href="http://media-server:7878/" target="_blank">media-server:7878</a>
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-icon">📝</span>
+                        <h3 class="service-title">Jellyseerr</h3>
                     </div>
-                    <div class="access-method tailscale-access">
-                        <strong>Tailscale:</strong> <a href="/movies/">/movies/</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="service-card">
-                <div class="service-header">
-                    <span class="service-icon">⬇️</span>
-                    <h3 class="service-title">qBittorrent</h3>
-                </div>
-                <p class="service-description">
-                    Torrent client for downloads.
-                </p>
-                <div class="access-methods">
-                    <div class="access-method local-access">
-                        <strong>Local:</strong> <a href="http://localhost:8080/" target="_blank">localhost:8080</a> | <a href="http://media-server:8080/" target="_blank">media-server:8080</a>
-                    </div>
-                    <div class="access-method tailscale-access">
-                        <strong>Tailscale:</strong> <a href="/torrent/">/torrent/</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="service-card">
-                <div class="service-header">
-                    <span class="service-icon">🔞</span>
-                    <h3 class="service-title">Whisparr</h3>
-                </div>
-                <p class="service-description">
-                    Adult content management.
-                </p>
-                <div class="access-methods">
-                    <div class="access-method local-access">
-                        <strong>Local:</strong> <a href="http://localhost:6969/" target="_blank">localhost:6969</a> | <a href="http://media-server:6969/" target="_blank">media-server:6969</a>
-                    </div>
-                    <div class="access-method tailscale-access">
-                        <strong>Tailscale:</strong> <a href="/xxx/">/xxx/</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="service-card">
-                <div class="service-header">
-                    <span class="service-icon">🔍</span>
-                    <h3 class="service-title">Prowlarr</h3>
-                </div>
-                <p class="service-description">
-                    Indexer manager for all *arr apps.
-                </p>
-                <div class="access-methods">
-                    <div class="access-method local-access">
-                        <strong>Local:</strong> <a href="http://localhost:9696/" target="_blank">localhost:9696</a> | <a href="http://media-server:9696/" target="_blank">media-server:9696</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="service-card">
-                <div class="service-header">
-                    <span class="service-icon">📝</span>
-                    <h3 class="service-title">Jellyseerr</h3>
-                </div>
-                <p class="service-description">
-                    Request movies and TV shows.
-                </p>
-                <div class="access-methods">
-                    <div class="access-method tailscale-access">
-                        <strong>Tailscale:</strong> <a href="/request/">/request/</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="service-card">
-                <div class="service-header">
-                    <span class="service-icon">💬</span>
-                    <h3 class="service-title">Bazarr</h3>
-                </div>
-                <p class="service-description">
-                    Automatic subtitle downloads for movies and TV shows.
-                </p>
-                <div class="access-methods">
-                    <div class="access-method local-access">
-                        <strong>Local:</strong> <a href="http://localhost:6767/" target="_blank">localhost:6767</a> | <a href="http://media-server:6767/" target="_blank">media-server:6767</a>
-                    </div>
+                    <p class="service-description">
+                        Request new movies and TV shows to be added to your library.
+                    </p>
+                    <a href="/request" class="service-link">Open Jellyseerr</a>
+                    <span class="port-info">:5055</span>
                 </div>
             </div>
         </div>
 
-        <div class="info-section">
-            <h2>📱 Mobile App Configuration</h2>
-            <p><strong>For Jellyfin App:</strong></p>
-            <ul>
-                <li>Local network: <code>http://media-server:8096</code></li>
-                <li>Tailscale: <code>http://media-server/view</code></li>
-            </ul>
-            <p style="margin-top: 16px;"><strong>For Navidrome Apps (Symfonium, play:Sub):</strong></p>
-            <ul>
-                <li>Local network: <code>http://media-server:4533</code></li>
-                <li>Tailscale: <code>http://media-server/music</code></li>
-            </ul>
+        <div class="category">
+            <h2 class="category-title">🤖 Content Automation</h2>
+            <div class="services">
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-icon">📺</span>
+                        <h3 class="service-title">Sonarr</h3>
+                    </div>
+                    <p class="service-description">
+                        Automated TV show downloads and library management.
+                    </p>
+                    <a href="/tv" class="service-link">Open Sonarr</a>
+                    <span class="port-info">:8989</span>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-icon">🎞️</span>
+                        <h3 class="service-title">Radarr</h3>
+                    </div>
+                    <p class="service-description">
+                        Automated movie downloads and library management.
+                    </p>
+                    <a href="/movies" class="service-link">Open Radarr</a>
+                    <span class="port-info">:7878</span>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-icon">🎼</span>
+                        <h3 class="service-title">Lidarr</h3>
+                    </div>
+                    <p class="service-description">
+                        Automated music downloads and library management. ID3 tagging support.
+                    </p>
+                    <a href="/lidarr" class="service-link">Open Lidarr</a>
+                    <span class="port-info">:8686</span>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-icon">💬</span>
+                        <h3 class="service-title">Bazarr</h3>
+                    </div>
+                    <p class="service-description">
+                        Automatic subtitle downloads for your movies and TV shows.
+                    </p>
+                    <a href="http://localhost:6767/" class="service-link">Open Bazarr</a>
+                    <span class="port-info">:6767</span>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-icon">🔞</span>
+                        <h3 class="service-title">Whisparr</h3>
+                    </div>
+                    <p class="service-description">
+                        Adult content automation and library management.
+                    </p>
+                    <a href="/xxx" class="service-link">Open Whisparr</a>
+                    <span class="port-info">:6969</span>
+                </div>
+            </div>
         </div>
 
-        <div class="info-section">
-            <h2>🔐 Security Notes</h2>
-            <ul>
-                <li><strong>Local Access:</strong> All ports are open on your network for easy access from any device at home</li>
-                <li><strong>Tailscale Access:</strong> Only nginx routes are available, providing controlled access via VPN</li>
-                <li><strong>Internet:</strong> No direct internet access - only through Tailscale VPN</li>
-                <li><strong>Recommendation:</strong> Keep your WiFi password secure and use Tailscale for remote access</li>
-            </ul>
+        <div class="category">
+            <h2 class="category-title">⬇️ Download Management</h2>
+            <div class="services">
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-icon">🌊</span>
+                        <h3 class="service-title">qBittorrent</h3>
+                    </div>
+                    <p class="service-description">
+                        Torrent client for downloading content. Default: admin/adminadmin
+                    </p>
+                    <a href="/torrent" class="service-link">Open qBittorrent</a>
+                    <span class="port-info">:8080</span>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-icon">🔍</span>
+                        <h3 class="service-title">Prowlarr</h3>
+                    </div>
+                    <p class="service-description">
+                        Indexer manager for all *arr applications. Central indexer management.
+                    </p>
+                    <a href="http://localhost:9696/" class="service-link">Open Prowlarr</a>
+                    <span class="port-info">:9696</span>
+                </div>
+            </div>
         </div>
 
-        <footer>
-            <p>🚀 Powered by Docker • Secured by Tailscale • Proxied by nginx</p>
-        </footer>
+        <div class="info-box">
+            <h3>📱 Mobile Apps</h3>
+            <p>
+                <strong>Jellyfin:</strong> Use server address <code>http://media-server:8096</code> or <code>http://YOUR_TAILSCALE_IP:8096</code><br>
+                <strong>Music Apps (Navidrome):</strong> Symfonium (Android), play:Sub (iOS) - Server: <code>http://media-server:4533</code><br>
+                <strong>qBittorrent:</strong> qBittorrent Remote app - Server: <code>http://media-server:8080</code>
+            </p>
+        </div>
+
+        <div class="info-box">
+            <h3>🎵 Jellyfin Music Features</h3>
+            <p>
+                Jellyfin now includes full music support with:<br>
+                • Music library scanning and playback<br>
+                • Playlist creation and management<br>
+                • Audiobook support with progress tracking<br>
+                • Podcast support with automatic episode downloads<br>
+                • Music discovery with similar artists<br>
+                • Album art and metadata fetching<br>
+                <br>
+                <strong>Lidarr</strong> provides automated music downloads with ID3 tagging, quality profiles, and Musicbrainz integration.
+            </p>
+        </div>
     </div>
 </body>
 </html>
