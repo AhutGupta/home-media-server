@@ -14,6 +14,9 @@ This guide helps you configure all services after initial installation. Each sec
 8. [Content Requests (Jellyseerr)](#content-requests-jellyseerr)
 9. [Subtitles (Bazarr)](#subtitles-bazarr)
 10. [Container Management (Portainer)](#container-management-portainer)
+11. [Podcasts & Audiobooks (Audiobookshelf)](#podcasts--audiobooks-audiobookshelf)
+12. [Music Discovery (Slskd)](#music-discovery-slskd)
+13. [Music Tagging (Beets)](#music-tagging-beets)
 
 ---
 
@@ -375,6 +378,30 @@ Open `http://localhost/` to see all services.
 
 ---
 
+## Podcasts & Audiobooks (Audiobookshelf)
+
+**Access:** `http://localhost:13378`  
+**Setup:** Create account, add library folders for podcasts/audiobooks. Configure RSS feeds.  
+**Full Guide:** [Audiobookshelf Docs](https://www.audiobookshelf.org/docs)
+
+---
+
+## Music Discovery (Slskd)
+
+**Access:** `http://localhost:5030`  
+**Setup:** Create password on first visit. Search for rare music. Can integrate with Lidarr.  
+**Full Guide:** [Slskd GitHub](https://github.com/slskd/slskd)
+
+---
+
+## Music Tagging (Beets)
+
+**Access:** `http://localhost:8337`  
+**Setup:** Configure to watch Lidarr downloads. Auto-tags with MusicBrainz metadata.  
+**Full Guide:** [Beets Documentation](https://beets.readthedocs.io/)
+
+---
+
 ## Quick Reference: Service URLs
 
 | Service | Port | URL | Purpose |
@@ -382,12 +409,15 @@ Open `http://localhost/` to see all services.
 | Dashboard | 80 | http://localhost/ | Central hub |
 | Jellyfin | 8096 | http://localhost:8096 | Media streaming |
 | Jellyseerr | 5055 | http://localhost:5055 | Content requests |
+| Audiobookshelf | 13378 | http://localhost:13378 | Podcasts & audiobooks |
 | Sonarr | 8989 | http://localhost:8989 | TV automation |
 | Radarr | 7878 | http://localhost:7878 | Movie automation |
 | Lidarr | 8686 | http://localhost:8686 | Music automation |
+| Beets | 8337 | http://localhost:8337 | Music tagging |
 | Bazarr | 6767 | http://localhost:6767 | Subtitles |
 | qBittorrent | 8080 | http://localhost:8080 | Torrent client |
 | Prowlarr | 9696 | http://localhost:9696 | Indexer manager |
+| Slskd | 5030 | http://localhost:5030 | Soulseek music |
 | Portainer | 9443 | https://localhost:9443 | Container management |
 
 ---

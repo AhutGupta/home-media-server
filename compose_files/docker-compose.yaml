@@ -219,14 +219,6 @@ services:
       - SYS_MODULE
     network_mode: host
     restart: unless-stopped
-  avahi:
-    image: flungo/avahi
-    container_name: avahi
-    hostname: media-server
-    network_mode: host
-    environment:
-      - SERVER_HOST_NAME=media-server
-    restart: unless-stopped
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
@@ -237,6 +229,60 @@ services:
     ports:
       - 9443:9443
       - 8000:8000
+    restart: unless-stopped
+
+  # OPTIONAL: Audiobookshelf for podcasts and audiobooks
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    container_name: audiobookshelf
+    hostname: media-server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - ${COMMON_PATH}/appdata/app/audiobookshelf:/config
+      - ${COMMON_PATH}/appdata/app/audiobookshelf/metadata:/metadata
+      - ${MEDIA_MUSIC}:/audiobooks
+      - ${MEDIA_PODCASTS:-${COMMON_PATH}/podcasts}:/podcasts
+    ports:
+      - 13378:80
+    restart: unless-stopped
+
+  # OPTIONAL: Slskd for Soulseek music downloading
+  slskd:
+    image: slskd/slskd:latest
+    container_name: slskd
+    hostname: media-server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+      - SLSKD_REMOTE_CONFIGURATION=true
+    volumes:
+      - ${COMMON_PATH}/appdata/app/slskd:/app
+      - ${COMMON_PATH}/downloads:/downloads
+    ports:
+      - 5030:5030
+      - 5031:5031
+      - 50300:50300
+    restart: unless-stopped
+
+  # OPTIONAL: Beets for music tagging and organization
+  beets:
+    image: lscr.io/linuxserver/beets:latest
+    container_name: beets
+    hostname: media-server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - ${COMMON_PATH}/appdata/app/beets:/config
+      - ${MEDIA_MUSIC}:/music
+      - ${COMMON_PATH}/downloads:/downloads
+    ports:
+      - 8337:8337
     restart: unless-stopped
 
 volumes:

@@ -253,16 +253,12 @@
                     <code>localhost:8096</code>
                 </div>
                 <div class="access-method">
-                    <strong>📶 From Local WiFi:</strong>
-                    <code>media-server.local:8096</code>
-                </div>
-                <div class="access-method">
                     <strong>🔒 Via Tailscale VPN:</strong>
                     <code>media-server:8096</code> or <code>100.x.x.x:8096</code>
                 </div>
             </div>
             <div class="access-note">
-                💡 Replace <code>8096</code> with the port number shown on each service card below. For local WiFi access to work, ensure Avahi service is running.
+                💡 Replace <code>8096</code> with the port number shown on each service card below.
             </div>
         </div>
 
@@ -286,27 +282,26 @@
                     <div class="mobile-apps">
                         <strong>📱 Mobile Apps Available</strong>
                         <p>Android & iOS: Search "Jellyfin" in app store</p>
-                        <p>Server: <code>media-server.local:8096</code> (WiFi) or <code>100.x.x.x:8096</code> (Tailscale)</p>
+                        <p>Server: <code>localhost:8096</code> (local) or <code>100.x.x.x:8096</code> (Tailscale)</p>
                     </div>
                 </div>
 
                 <div class="service-card">
                     <div class="service-header">
-                        <div class="service-icon">🎵</div>
+                        <div class="service-icon">📚</div>
                         <div>
-                            <div class="service-title">Navidrome<span class="service-port">:4533</span></div>
+                            <div class="service-title">Audiobookshelf<span class="service-port">:13378</span></div>
                         </div>
                     </div>
                     <div class="service-description">
-                        Dedicated music streaming server with Subsonic API support. Perfect for music lovers.
+                        Podcasts and audiobooks with perfect state tracking. Remembers exactly where you left off.
                     </div>
                     <div class="service-links">
-                        <a href="javascript:void(0)" class="service-link" data-port="4533">Open Navidrome</a>
+                        <a href="javascript:void(0)" class="service-link" data-port="13378">Open Audiobookshelf</a>
                     </div>
                     <div class="mobile-apps">
                         <strong>📱 Mobile Apps Available</strong>
-                        <p>Android: Symfonium, Subtracks, DSub</p>
-                        <p>iOS: play:Sub, Amperfy</p>
+                        <p>Android & iOS: Search "Audiobookshelf" in app store</p>
                     </div>
                 </div>
 
@@ -405,6 +400,21 @@
                         <a href="javascript:void(0)" class="service-link" data-port="6767">Open Bazarr</a>
                     </div>
                 </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">🏷️</div>
+                        <div>
+                            <div class="service-title">Beets<span class="service-port">:8337</span></div>
+                        </div>
+                    </div>
+                    <div class="service-description">
+                        Professional music tagging with MusicBrainz. Perfect organization and metadata for your music library.
+                    </div>
+                    <div class="service-links">
+                        <a href="javascript:void(0)" class="service-link" data-port="8337">Open Beets</a>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -439,6 +449,21 @@
                     </div>
                     <div class="service-links">
                         <a href="javascript:void(0)" class="service-link" data-port="9696">Open Prowlarr</a>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">🎵</div>
+                        <div>
+                            <div class="service-title">Slskd<span class="service-port">:5030</span></div>
+                        </div>
+                    </div>
+                    <div class="service-description">
+                        Soulseek client for rare and obscure music. Perfect for tracks you can't find anywhere else.
+                    </div>
+                    <div class="service-links">
+                        <a href="javascript:void(0)" class="service-link" data-port="5030">Open Slskd</a>
                     </div>
                 </div>
             </div>

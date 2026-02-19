@@ -52,17 +52,20 @@ open http://localhost/
 ### Media Streaming
 - **Jellyfin** (Port 8096) - Stream movies, TV, music, audiobooks, podcasts
 - **Jellyseerr** (Port 5055) - User-friendly content requests
+- **Audiobookshelf** (Port 13378) - Podcasts & audiobooks with perfect state tracking
 
 ### Content Automation
 - **Sonarr** (Port 8989) - TV show management and downloads
 - **Radarr** (Port 7878) - Movie management and downloads
 - **Lidarr** (Port 8686) - Music management with ID3 tagging
+- **Beets** (Port 8337) - Professional music tagging with MusicBrainz
 - **Whisparr** (Port 6969) - Adult content (optional)
 - **Bazarr** (Port 6767) - Automatic subtitle downloads
 
 ### Download Management
 - **qBittorrent** (Port 8080) - Torrent client
 - **Prowlarr** (Port 9696) - Unified indexer manager
+- **Slskd** (Port 5030) - Soulseek for rare/obscure music
 - **Flaresolverr** (Port 8191) - Cloudflare bypass
 
 ### Infrastructure
@@ -70,7 +73,7 @@ open http://localhost/
 - **Portainer** (Port 9443) - Container management with web UI
 - **Tailscale** - Secure VPN for remote access
 
-**Total: 13 containers** working together seamlessly.
+**Total: 16 containers** working together seamlessly.
 
 ## 🖥️ Hardware Requirements
 
