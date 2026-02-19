@@ -49,6 +49,10 @@ http://localhost/
 - **Jellyseerr** (5055) - User-friendly content requests
 - **Tailscale** - Secure VPN for remote access
 
+### Infrastructure
+- **Portainer** (9443) - Docker container management, logs, and monitoring
+- **Avahi** - mDNS for local network hostname resolution (enables `media-server.local`)
+
 ## Access Methods
 
 ### Localhost (Same Machine)
@@ -59,24 +63,26 @@ http://localhost:8989/    # Sonarr
 http://localhost:8080/    # qBittorrent
 ```
 
-### Network (WiFi Devices)
+### Local WiFi (Other Devices on Same Network)
+Use `.local` hostname (requires Avahi service):
 ```
-http://media-server:8096/    # Jellyfin
-http://media-server:7878/    # Radarr
-http://media-server:8989/    # Sonarr
-http://media-server:8686/    # Lidarr
-http://media-server:8080/    # qBittorrent
+http://media-server.local:8096/    # Jellyfin
+http://media-server.local:7878/    # Radarr
+http://media-server.local:8989/    # Sonarr
+http://media-server.local:8686/    # Lidarr
+http://media-server.local:8080/    # qBittorrent
+```
+
+**Note:** For local WiFi access to work, ensure the Avahi service is running:
+```bash
+docker-compose up -d avahi
 ```
 
 ### Tailscale (Remote via VPN)
-Use the same port-based URLs with your Tailscale IP:
+With Tailscale connected, use either the hostname or Tailscale IP:
 ```
-http://100.x.x.x:8096/    # Jellyfin
-http://100.x.x.x:7878/    # Radarr
-http://100.x.x.x:8989/    # Sonarr
-```
-
-Or use the dashboard quick links (redirects to correct port):
+http://media-server:8096/      # Hostname works with Tailscale DNS
+http://100.x.x.x:8096/         # Or use your Tailscale IP
 ```
 http://100.x.x.x/view      # → Jellyfin :8096
 http://100.x.x.x/movies    # → Radarr :7878

@@ -238,18 +238,13 @@ services:
     ports:
       - 4533:4533
     restart: unless-stopped
-  dozzle:
-    image: amir20/dozzle:latest
-    container_name: dozzle
+  avahi:
+    image: flungo/avahi
+    container_name: avahi
     hostname: media-server
+    network_mode: host
     environment:
-      - DOZZLE_LEVEL=info
-      - DOZZLE_TAILSIZE=300
-      - DOZZLE_FILTER=status=running
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    ports:
-      - 8888:8080
+      - SERVER_HOST_NAME=media-server
     restart: unless-stopped
   portainer:
     image: portainer/portainer-ce:latest
