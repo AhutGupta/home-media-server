@@ -125,7 +125,7 @@ services:
       # - 8920:8920
       # - 7359:7359/udp
       # - 1900:1900/udp
-    # Persist Jellyfin config, cache, and media (read-only for media)
+    # Persist Jellyfin config, cache, and media
     volumes:
       - ${COMMON_PATH}/appdata/app/jellyfin:/config
       - ${COMMON_PATH}/jellyfin/cache:/cache
@@ -133,7 +133,7 @@ services:
       - ${MEDIA_MOVIES}:/media/Movies:ro
       - ${MEDIA_TV}:/media/TV:ro
       - ${MEDIA_PERSONAL}:/media/Personal:ro
-      - ${MEDIA_MUSIC}:/media/Music:ro
+      - ${MEDIA_MUSIC}:/media/Music
       - ${MEDIA_TEST}:/media/test:ro
       - ${DRIVE_MOVIES}:/media/drive/Movies:ro
       - ${DRIVE_TV_SERIES}:/media/drive/TV:ro
