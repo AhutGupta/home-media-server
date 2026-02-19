@@ -16,7 +16,6 @@ services:
       - sonarr
       - radarr
       - whisparr
-      - navidrome
       - lidarr
     restart: unless-stopped
   
@@ -219,24 +218,6 @@ services:
       - NET_ADMIN
       - SYS_MODULE
     network_mode: host
-    restart: unless-stopped
-  navidrome:
-    image: deluan/navidrome:latest
-    container_name: navidrome
-    hostname: media-server
-    environment:
-      - ND_LOGLEVEL=info
-      - ND_SESSIONTIMEOUT=24h
-      - ND_ENABLETRANSCODINGCONFIG=true
-      - ND_TRANSCODINGCACHESIZE=150MB
-      - ND_SCANSCHEDULE=@every 1h
-      - TZ=${TZ}
-    volumes:
-      - ${COMMON_PATH}/appdata/app/navidrome:/data
-      - ${MEDIA_MUSIC}:/music/library:ro
-      - ${DRIVE_MUSIC}:/music/drive:ro
-    ports:
-      - 4533:4533
     restart: unless-stopped
   avahi:
     image: flungo/avahi
