@@ -1,228 +1,31 @@
----
-version: "3.9"
+version: '3.9'
 services:
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
-    ports:
-      - 80:80
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./dashboard.html:/etc/nginx/html/dashboard.html:ro
-    depends_on:
-      - jellyfin
-      - jellyseerr
-      - sonarr
-      - radarr
-      - whisparr
-      - navidrome
-      - lidarr
-    restart: unless-stopped
-  
-  qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:latest
-    container_name: qbittorrent
-    environment:
-      - WEBUI_PORT=8080
-      - PUID=1000
-      - PGID=1000
-      - TZ=${TZ}
-      - UMASK=002
-      # - DOCKER_MODS=ghcr.io/gabe565/linuxserver-mod-vuetorrent
-    # Persist qBittorrent config and downloads
-    volumes:
-      - ${COMMON_PATH}/appdata/app/qbittorrent:/config
-      - ${COMMON_PATH}/downloads:/downloads
-    ports:
-      - 8080:8080
-      - 6881:6881
-      - 6881:6881/udp
-    restart: unless-stopped
-  flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:latest
-    container_name: flaresolverr
-    environment:
-      - LOG_LEVEL=${LOG_LEVEL:-info}
-      - LOG_HTML=${LOG_HTML:-false}
-      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
-      - TZ=${TZ}
-      #- LANG=fr_FR
-      - LANG=en_US
-    ports:
-      - 127.0.0.1:8191:8191
-    restart: unless-stopped
-  prowlarr:
-    image: lscr.io/linuxserver/prowlarr:latest
-    container_name: prowlarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=${TZ}
-    # Persist Prowlarr config
-    volumes:
-      - ${COMMON_PATH}/appdata/app/prowlarr:/config
-    ports:
-      - 9696:9696
-    restart: unless-stopped
-  sonarr:
-    image: lscr.io/linuxserver/sonarr:latest
-    container_name: sonarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=${TZ}
-    # Persist Sonarr config and media
-    volumes:
-      - ${COMMON_PATH}/appdata/app/sonarr:/config
-      - ${COMMON_PATH}/downloads:/downloads
-      - ${MEDIA_TV}:/media/TV
-      - ${MEDIA_PERSONAL}:/media/personal
-      - ${DRIVE_TV_SERIES}:/media/drive/TV:ro
-    ports:
-      - 8989:8989
-    restart: unless-stopped
-  radarr:
-    image: lscr.io/linuxserver/radarr:latest
-    container_name: radarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=${TZ}
-    # Persist Radarr config and media
-    volumes:
-      - ${COMMON_PATH}/appdata/app/radarr:/config
-      - ${COMMON_PATH}/downloads:/downloads
-      - ${MEDIA_MOVIES}:/media/Movies
-      - ${DRIVE_MOVIES}:/media/drive/Movies:ro
-    ports:
-      - 7878:7878
-    restart: unless-stopped
-  lidarr:
-    image: lscr.io/linuxserver/lidarr:latest
-    container_name: lidarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=${TZ}
-    # Persist Lidarr config and music
-    volumes:
-      - ${COMMON_PATH}/appdata/app/lidarr:/config
-      - ${COMMON_PATH}/downloads:/downloads
-      - ${MEDIA_MUSIC}:/media/Music
-      - ${DRIVE_MUSIC}:/media/drive/Music:ro
-    ports:
-      - 8686:8686
-    restart: unless-stopped
-  jellyfin:
-    image: lscr.io/linuxserver/jellyfin:latest
-    container_name: jellyfin
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=${TZ}
-    ports:
-      - 8096:8096
-      # - 8920:8920
-      # - 7359:7359/udp
-      # - 1900:1900/udp
-    # Persist Jellyfin config, cache, and media
-    volumes:
-      - ${COMMON_PATH}/appdata/app/jellyfin:/config
-      - ${COMMON_PATH}/jellyfin/cache:/cache
-      - ${COMMON_PATH}/downloads:/downloads
-      - ${MEDIA_MOVIES}:/media/Movies:ro
-      - ${MEDIA_TV}:/media/TV:ro
-      - ${MEDIA_PERSONAL}:/media/Personal:ro
-      - ${MEDIA_MUSIC}:/media/Music
-      - ${MEDIA_TEST}:/media/test:ro
-      - ${DRIVE_MOVIES}:/media/drive/Movies:ro
-      - ${DRIVE_TV_SERIES}:/media/drive/TV:ro
-      - ${DRIVE_MUSIC}:/media/drive/Music:ro
-      - ${DRIVE_TEST}:/media/drive/test:ro
-    restart: unless-stopped
   jellyseerr:
-    image: fallenbagel/jellyseerr:latest
+    image: jellyseerr/jellyseerr:latest
     container_name: jellyseerr
-    environment:
-      - LOG_LEVEL=debug
-      - TZ=${TZ}
+    hostname: media-server
     ports:
-      - 127.0.0.1:5055:5055
-    # Persist Jellyseerr config and media (read-only for media)
-    volumes:
-      - ${COMMON_PATH}/appdata/app/jellyseerr:/app/config
-      - ${MEDIA_MOVIES}:/media/Movies:ro
-      - ${MEDIA_TV}:/media/TV:ro
-      - ${MEDIA_PERSONAL}:/media/Personal:ro
-      - ${MEDIA_TEST}:/media/test:ro
-      - ${DRIVE_MOVIES}:/media/drive/Movies:ro
-      - ${DRIVE_TV_SERIES}:/media/drive/TV:ro
-      - ${DRIVE_TEST}:/media/drive/test:ro
+      - '5055:5055'
     restart: unless-stopped
+
   bazarr:
-    image: lscr.io/linuxserver/bazarr:latest
+    image: emby/bazarr
     container_name: bazarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=${TZ}
-    # Persist Bazarr config and media (read-only for media)
-    volumes:
-      - ${COMMON_PATH}/appdata/app/bazarr:/config
-      - ${MEDIA_MOVIES}:/media/Movies
-      - ${MEDIA_TV}:/media/TV
-      - ${DRIVE_MOVIES}:/media/drive/Movies
-      - ${DRIVE_TV_SERIES}:/media/drive/TV
+    hostname: media-server
     ports:
-      - 127.0.0.1:6767:6767
+      - '6767:6767'
     restart: unless-stopped
-  whisparr:
-    image: ghcr.io/hotio/whisparr:latest
-    container_name: whisparr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=${TZ}
-    # Persist Whisparr config and test media
-    volumes:
-      - ${COMMON_PATH}/appdata/app/whisparr:/config
-      - ${COMMON_PATH}/downloads:/downloads
-      - ${MEDIA_TEST}:/media/test
-      - ${DRIVE_TEST}:/media/drive/test:ro
-    ports:
-      - 6969:6969
-    restart: unless-stopped
-  tailscale:
-    image: tailscale/tailscale:latest
-    container_name: tailscale
+
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
     hostname: media-server
     environment:
-      - TS_AUTHKEY=${TS_AUTHKEY}
-      - TS_STATE_DIR=/var/lib/tailscale
-      - TS_USERSPACE=false
-      - TS_EXTRA_ARGS=--advertise-exit-node --advertise-routes=172.18.0.0/16
+      - DOZZLE_LEVEL=info
+      - DOZZLE_TAILSIZE=300
+      - DOZZLE_FILTER=status=running
     volumes:
-      - ${COMMON_PATH}/appdata/app/tailscale:/var/lib/tailscale
-      - /dev/net/tun:/dev/net/tun
-    cap_add:
-      - NET_ADMIN
-      - SYS_MODULE
-    network_mode: host
-    restart: unless-stopped
-  navidrome:
-    image: deluan/navidrome:latest
-    container_name: navidrome
-    environment:
-      - ND_LOGLEVEL=info
-      - ND_SESSIONTIMEOUT=24h
-      - ND_ENABLETRANSCODINGCONFIG=true
-      - ND_TRANSCODINGCACHESIZE=150MB
-      - ND_SCANSCHEDULE=@every 1h
-      - TZ=${TZ}
-    volumes:
-      - ${COMMON_PATH}/appdata/app/navidrome:/data
-      - ${MEDIA_MUSIC}:/music/library:ro
-      - ${DRIVE_MUSIC}:/music/drive:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
-      - 4533:4533
+      - '8888:8080'
     restart: unless-stopped
