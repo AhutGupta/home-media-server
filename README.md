@@ -1,8 +1,7 @@
 # 🏠 Home Media Server
 
 <div align="center">
-    <img src="image/architecture-diagram.png" width="600" alt="Architecture Diagram">
-    <br><em>Complete integrated media server architecture</em>
+    <img src="image/architecture-diagram.png" width="700" alt="Architecture Diagram">
     
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Docker](https://img.shields.io/badge/Docker-Required-2496ED?logo=docker)](https://www.docker.com/)
@@ -13,6 +12,19 @@
 [Quick Start](#-quick-start) • [Features](#-features) • [Setup Guide](SETUP_GUIDE.md) • [Contributing](CONTRIBUTING.md)
 
 </div>
+
+## 🏗️ Architecture Overview
+
+The diagram above shows how all services work together in this media server setup:
+
+- **Tailscale VPN** provides secure encrypted access from anywhere
+- **nginx Dashboard** serves as the central hub (Port 80) with quick links to all services
+- **Media Services** handle streaming: Jellyfin (movies/TV/music), Jellyseerr (requests), Audiobookshelf (podcasts/audiobooks)
+- **Content Automation** manages your library: Sonarr (TV), Radarr (movies), Lidarr (music), Beets (tagging), plus Whisparr and Bazarr
+- **Download Management** handles acquisitions: qBittorrent (torrents), Prowlarr (indexers), Slskd (Soulseek P2P), Flaresolverr (Cloudflare bypass)
+- **Portainer** provides web-based container management and monitoring
+
+All services communicate seamlessly to automate your media management workflow.
 
 
 ---
@@ -227,45 +239,6 @@ docker-compose up -d --force-recreate
 - Enable GPU transcoding (Nvidia)
 
 **More Help**: See [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed troubleshooting.
-
-## 📊 Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        nginx (Port 80)                       │
-│                    Dashboard & Reverse Proxy                 │
-└─────────────────────────────────────────────────────────────┘
-                              │
-        ┌─────────────────────┼─────────────────────┐
-        │                     │                     │
-┌───────▼──────┐    ┌────────▼────────┐   ┌───────▼────────┐
-│   Jellyfin   │    │   Jellyseerr    │   │   Portainer    │
-│ Media Stream │    │Content Requests │   │Container Mgmt  │
-│   :8096      │    │     :5055       │   │    :9443       │
-└──────────────┘    └─────────────────┘   └────────────────┘
-                              │
-        ┌─────────────────────┼─────────────────────┐
-        │                     │                     │
-┌───────▼──────┐    ┌────────▼────────┐   ┌───────▼────────┐
-│    Sonarr    │    │     Radarr      │   │    Lidarr      │
-│  TV Shows    │    │     Movies      │   │     Music      │
-│   :8989      │    │     :7878       │   │    :8686       │
-└───────┬──────┘    └────────┬────────┘   └───────┬────────┘
-        │                    │                    │
-        └────────────────────┼────────────────────┘
-                             │
-                    ┌────────▼────────┐
-                    │    Prowlarr     │
-                    │Indexer Manager  │
-                    │     :9696       │
-                    └────────┬────────┘
-                             │
-                    ┌────────▼────────┐
-                    │   qBittorrent   │
-                    │ Download Client │
-                    │     :8080       │
-                    └─────────────────┘
-```
 
 ## 🌟 Star History
 
