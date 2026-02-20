@@ -1,0 +1,71 @@
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    Home Media Server Architecture                           │
+│                         16 Services Total                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+                              ┌─────────────┐
+                              │  Tailscale  │  VPN Entry Point
+                              │   (host)    │  Secure Remote Access
+                              └──────┬──────┘
+                                     │
+                              ┌──────▼──────┐
+                              │    nginx    │  Dashboard & Reverse Proxy
+                              │   Port 80   │
+                              └──────┬──────┘
+                                     │
+         ┌───────────────────────────┼───────────────────────────┐
+         │                           │                           │
+    ┌────▼─────┐              ┌─────▼──────┐            ┌──────▼────────┐
+    │  Media   │              │  Content   │            │   Downloads   │
+    │ Services │              │ Automation │            │  Management   │
+    └──────────┘              └────────────┘            └───────────────┘
+
+┌──────────────────┐     ┌───────────────────┐     ┌────────────────────┐
+│ Jellyfin (8096)  │     │ Sonarr (8989)     │     │ qBittorrent (8080) │
+│ Media Streaming  │     │ TV Shows          │     │ Torrent Client     │
+├──────────────────┤     ├───────────────────┤     ├────────────────────┤
+│Jellyseerr (5055) │     │ Radarr (7878)     │     │ Prowlarr (9696)    │
+│ Content Requests │     │ Movies            │     │ Indexer Manager    │
+├──────────────────┤     ├───────────────────┤     ├────────────────────┤
+│Audiobookshelf    │     │ Lidarr (8686)     │     │ Slskd (5030)       │
+│ (13378)          │     │ Music             │     │ Soulseek Music     │
+│ Podcasts/Books   │     ├───────────────────┤     ├────────────────────┤
+└──────────────────┘     │ Beets (8337)      │     │ Flaresolverr       │
+                         │ Music Tagging     │     │ (8191)             │
+                         ├───────────────────┤     │ Cloudflare Bypass  │
+                         │ Whisparr (6969)   │     └────────────────────┘
+                         │ Adult Content     │
+                         ├───────────────────┤
+                         │ Bazarr (6767)     │
+                         │ Subtitles         │
+                         └───────────────────┘
+
+                         ┌───────────────────┐
+                         │  Infrastructure   │
+                         └───────────────────┘
+                         
+                         ┌───────────────────┐
+                         │ Portainer (9443)  │
+                         │ Docker Management │
+                         └───────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Service Flow:                                                               │
+│                                                                             │
+│ 1. Tailscale → nginx → Access all services securely                        │
+│ 2. Prowlarr → Provides indexers to Sonarr/Radarr/Lidarr                   │
+│ 3. Sonarr/Radarr/Lidarr → qBittorrent → Downloads content                 │
+│ 4. Beets → Tags music after Lidarr downloads                              │
+│ 5. Slskd → Alternative music source (Soulseek P2P)                        │
+│ 6. Bazarr → Auto-downloads subtitles for Sonarr/Radarr content           │
+│ 7. Jellyfin → Streams all media (movies, TV, music, audiobooks)          │
+│ 8. Audiobookshelf → Manages podcasts/audiobooks with state tracking      │
+│ 9. Jellyseerr → Users request content → Sonarr/Radarr download it        │
+│ 10. Portainer → Manage all Docker containers via web UI                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Key Differences from Old Architecture:
+✅ Added: Tailscale (VPN), nginx (Dashboard), Audiobookshelf, Slskd, Beets
+✅ Added: Lidarr, Whisparr, Bazarr, Portainer, Jellyseerr
+✅ Replaced: Jackett → Prowlarr (modern indexer manager)
+✅ Consolidated: All music in Jellyfin (removed Navidrome)

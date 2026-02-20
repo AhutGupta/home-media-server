@@ -120,14 +120,10 @@ services:
       - 8686:8686
     restart: unless-stopped
   jellyfin:
-    # GPU Hardware Transcoding - Nvidia GPU Support
-    runtime: nvidia
     image: lscr.io/linuxserver/jellyfin:latest
     container_name: jellyfin
     hostname: media-server
     environment:
-      - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=all
       - PUID=1000
       - PGID=1000
       - TZ=${TZ}
@@ -150,14 +146,6 @@ services:
       - ${DRIVE_TV_SERIES}:/media/drive/TV:ro
       - ${DRIVE_MUSIC}:/media/drive/Music:ro
       - ${DRIVE_TEST}:/media/drive/test:ro
-    # Nvidia GPU configuration for hardware transcoding
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu, compute, video]
     restart: unless-stopped
   jellyseerr:
     image: fallenbagel/jellyseerr:latest

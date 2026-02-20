@@ -1,19 +1,19 @@
 # 🏠 Home Media Server
 
 <div align="center">
-    <img src="image/Isyrr.png" width="300">
+    <img src="image/architecture-diagram.png" width="600" alt="Architecture Diagram">
+    <br><em>Complete integrated media server architecture</em>
     
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Docker](https://img.shields.io/badge/Docker-Required-2496ED?logo=docker)](https://www.docker.com/)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-**A complete, self-hosted media server solution for managing and streaming your personal media library.**
+**Complete Docker-based home media server featuring Jellyfin for streaming, automated content management, torrent/Soulseek downloads, podcast/audiobook tracking, professional music tagging, and secure remote access via Tailscale VPN.**
 
-[Quick Start](#-quick-start) • [Features](#-features) • [Hardware Requirements](#%EF%B8%8F-hardware-requirements) • [Setup Guide](SETUP_GUIDE.md) • [Contributing](CONTRIBUTING.md)
+[Quick Start](#-quick-start) • [Features](#-features) • [Setup Guide](SETUP_GUIDE.md) • [Contributing](CONTRIBUTING.md)
 
 </div>
 
-> **Note**: [Version française disponible ici](README-fr.md)
 
 ---
 
@@ -73,42 +73,9 @@ open http://localhost/
 - **Portainer** (Port 9443) - Container management with web UI
 - **Tailscale** - Secure VPN for remote access
 
-**Total: 16 containers** working together seamlessly.
+**All services** work together seamlessly to provide a complete media management and streaming solution.
 
-## 🖥️ Hardware Requirements
 
-### Minimum Requirements
-- **CPU**: Dual-core processor (2.0 GHz+)
-- **RAM**: 4 GB
-- **Storage**: 100 GB free space (more for media)
-- **OS**: Windows 10/11, Linux, macOS with Docker support
-- **Network**: Stable internet connection
-
-### Recommended Specifications
-- **CPU**: Quad-core or better (Intel i5/i7, AMD Ryzen 5/7)
-- **RAM**: 8-16 GB
-- **Storage**: 500 GB+ for system, separate drives for media
-- **GPU**: Nvidia GPU for hardware transcoding (optional but recommended)
-- **OS**: Ubuntu Server 22.04 LTS or Windows 10/11 Pro
-
-### Tested Platforms
-- ✅ **Beelink SER5 Max** (AMD Ryzen 7 5800H, 32GB RAM) - Excellent
-- ✅ **Intel NUC** (i5/i7 models) - Great
-- ✅ **Raspberry Pi 4** (4GB/8GB) - Works, but limited transcoding
-- ✅ **Windows Desktop/Laptop** (8GB+ RAM) - Good
-- ✅ **Linux Server** (Ubuntu, Debian, Fedora) - Excellent
-- ✅ **Mac Mini** (Intel or Apple Silicon with Docker Desktop) - Good
-
-### GPU Acceleration (Optional)
-For hardware transcoding in Jellyfin:
-- **Nvidia GPUs**: Use `docker-compose-nvidia.yaml` instead
-- **Intel Quick Sync**: Supported on Intel 7th gen+
-- **AMD GPUs**: Limited support
-
-### Storage Recommendations
-- **System**: 100 GB SSD for Docker containers and configs
-- **Media**: Separate HDD/SSD (1TB+ recommended)
-- **Downloads**: 100-500 GB for temporary files
 
 ## 🌐 Access Your Media Server
 
@@ -192,16 +159,31 @@ See [LICENSE](LICENSE) for full terms.
 docker-compose up -d
 ```
 
-### Nvidia GPU Support
-For hardware transcoding with Nvidia GPUs:
+### Nvidia GPU Support (Optional)
+
+For hardware transcoding in Jellyfin with Nvidia GPUs:
+
 ```bash
+# Use nvidia compose file instead of standard
 docker-compose -f docker-compose-nvidia.yaml up -d
 ```
 
-**Prerequisites for Nvidia**:
-- Nvidia GPU with compute capability 3.0+
-- [Nvidia Docker runtime](https://github.com/NVIDIA/nvidia-docker) installed
-- Nvidia drivers installed on host
+**Prerequisites:**
+- Nvidia GPU (GTX 1050+ or newer recommended)
+- [Nvidia Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) installed
+- Nvidia drivers installed on host system
+
+**Benefits:**
+- Hardware transcoding (much faster than CPU)
+- 4K streaming with minimal CPU usage
+- Multiple simultaneous streams
+- Faster thumbnail generation
+
+**Setup Steps:**
+1. Install Nvidia drivers on your system
+2. Install Nvidia Container Toolkit
+3. Use `docker-compose-nvidia.yaml` instead of standard compose file
+4. Enable hardware acceleration in Jellyfin: Dashboard → Playback → Hardware Acceleration
 
 ## 📚 Documentation
 
