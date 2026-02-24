@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Media Server</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 20px;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            color: #a0a0a0;
+            font-weight: 300;
+        }
+        
+        .access-info {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .access-info h2 {
+            color: #4dabf7;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+        
+        .access-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .access-method {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #4dabf7;
+            transition: all 0.3s ease;
+        }
+        
+        .access-method:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+        
+        .access-method strong {
+            display: block;
+            color: #4dabf7;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .access-method code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.95em;
+            color: #a0e9ff;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .access-note {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(77, 171, 247, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid #4dabf7;
+            color: #a0e9ff;
+            font-size: 0.9em;
+        }
+        
+        .category {
+            margin-bottom: 50px;
+        }
+        
+        .category-title {
+            color: #fff;
+            font-size: 2em;
+            margin-bottom: 25px;
+            font-weight: 600;
+            padding-left: 10px;
+        }
+        
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        
+        .service-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(77, 171, 247, 0.3);
+            border-color: rgba(77, 171, 247, 0.5);
+        }
+        
+        .service-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+        
+        .service-icon {
+            font-size: 2.5em;
+            line-height: 1;
+        }
+        
+        .service-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .service-port {
+            color: #4dabf7;
+            font-weight: 500;
+            margin-left: 8px;
+        }
+        
+        .service-description {
+            color: #a0a0a0;
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .service-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .service-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .service-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .mobile-apps {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255, 193, 7, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid #ffc107;
+        }
+        
+        .mobile-apps strong {
+            color: #ffc107;
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .mobile-apps p {
+            color: #e0e0e0;
+            font-size: 0.9em;
+            margin: 5px 0;
+        }
+        
+        .mobile-apps code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            color: #a0e9ff;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            .services {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏠 Home Media Server</h1>
+            <p>Your Media Hub</p>
+        </div>
+
+        <div class="access-info">
+            <h2>📍 How to Access Services</h2>
+            <div class="access-methods">
+                <div class="access-method">
+                    <strong>🖥️ From Server Machine:</strong>
+                    <code>localhost:8096</code>
+                </div>
+                <div class="access-method">
+                    <strong>🔒 Via Tailscale VPN:</strong>
+                    <code>media-server:8096</code> or <code>100.x.x.x:8096</code>
+                </div>
+            </div>
+            <div class="access-note">
+                💡 Replace <code>8096</code> with the port number shown on each service card below.
+            </div>
+        </div>
+
+        <!-- Media Services -->
+        <div class="category">
+            <h2 class="category-title">🎬 Media Services</h2>
+            <div class="services">
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">📺</div>
+                        <div>
+                            <div class="service-title">Jellyfin<span class="service-port">:8096</span></div>
+                        </div>
+                    </div>
+                    <div class="service-description">
+                        Stream movies, TV shows, music, audiobooks, and podcasts. Your complete media library in one place.
+                    </div>
+                    <div class="service-links">
+                        <a href="javascript:void(0)" class="service-link" data-port="8096">Open Jellyfin</a>
+                    </div>
+                    <div class="mobile-apps">
+                        <strong>📱 Mobile Apps Available</strong>
+                        <p>Android & iOS: Search "Jellyfin" in app store</p>
+                        <p>Server: <code>localhost:8096</code> (local) or <code>100.x.x.x:8096</code> (Tailscale)</p>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">📚</div>
+                        <div>
+                            <div class="service-title">Audiobookshelf<span class="service-port">:13378</span></div>
+                        </div>
+                    </div>
+                    <div class="service-description">
+                        Podcasts and audiobooks with perfect state tracking. Remembers exactly where you left off.
+                    </div>
+                    <div class="service-links">
+                        <a href="javascript:void(0)" class="service-link" data-port="13378">Open Audiobookshelf</a>
+                    </div>
+                    <div class="mobile-apps">
+                        <strong>📱 Mobile Apps Available</strong>
+                        <p>Android & iOS: Search "Audiobookshelf" in app store</p>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">🎫</div>
+                        <div>
+                            <div class="service-title">Jellyseerr<span class="service-port">:5055</span></div>
+                        </div>
+                    </div>
+                    <div class="service-description">
+                        Request movies and TV shows. Browse popular content and manage your media requests.
+                    </div>
+                    <div class="service-links">
+                        <a href="javascript:void(0)" class="service-link" data-port="5055">Open Jellyseerr</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Management -->
+        <div class="category">
+            <h2 class="category-title">📚 Content Management</h2>
+            <div class="services">
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">📺</div>
+                        <div>
+                            <div class="service-title">Sonarr<span class="service-port">:8989</span></div>
+                        </div>
+                    </div>
+                    <div class="service-description">
+                        Automated TV show downloads. Track and organize your favorite series.
+                    </div>
+                    <div class="service-links">
+                        <a href="javascript:void(0)" class="service-link" data-port="8989">Open Sonarr</a>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">🎬</div>
+                        <div>
+                            <div class="service-title">Radarr<span class="service-port">:7878</span></div>
+                        </div>
+                    </div>
+                    <div class="service-description">
+                        Automated movie downloads. Maintain and grow your film collection.
+                    </div>
+                    <div class="service-links">
+                        <a href="javascript:void(0)" class="service-link" data-port="7878">Open Radarr</a>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">🎵</div>
+                        <div>
+                            <div class="service-title">Lidarr<span class="service-port">:8686</span></div>
+                        </div>
+                    </div>
+                    <div class="service-description">
+                        Automated music downloads with ID3 tagging and MusicBrainz integration.
+                    </div>
+                    <div class="service-links">
+                        <a href="javascript:void(0)" class="service-link" data-port="8686">Open Lidarr</a>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">🔞</div>
+                        <div>
+                            <div class="service-title">Whisparr<span class="service-port">:6969</span></div>
+                        </div>
+                    </div>
+                    <div class="service-description">
+                        Automated adult content management and downloads.
+                    </div>
+                    <div class="service-links">
+                        <a href="javascript:void(0)" class="service-link" data-port="6969">Open Whisparr</a>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">💬</div>
+                        <div>
+                            <div class="service-title">Bazarr<span class="service-port">:6767</span></div>
+                        </div>
+                    </div>
+                    <div class="service-description">
+                        Automated subtitle downloads for your movies and TV shows.
+                    </div>
+                    <div class="service-links">
+                        <a href="javascript:void(0)" class="service-link" data-port="6767">Open Bazarr</a>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">🏷️</div>
+                        <div>
+                            <div class="service-title">Beets<span class="service-port">:8337</span></div>
+                        </div>
+                    </div>
+                    <div class="service-description">
+                        Professional music tagging with MusicBrainz. Perfect organization and metadata for your music library.
+                    </div>
+                    <div class="service-links">
+                        <a href="javascript:void(0)" class="service-link" data-port="8337">Open Beets</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download Management -->
+        <div class="category">
+            <h2 class="category-title">⬇️ Download Management</h2>
+            <div class="services">
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">🌊</div>
+                        <div>
+                            <div class="service-title">qBittorrent<span class="service-port">:8080</span></div>
+                        </div>
+                    </div>
+                    <div class="service-description">
+                        Torrent client for downloading content. Manage your downloads and queues.
+                    </div>
+                    <div class="service-links">
+                        <a href="javascript:void(0)" class="service-link" data-port="8080">Open qBittorrent</a>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">🔍</div>
+                        <div>
+                            <div class="service-title">Prowlarr<span class="service-port">:9696</span></div>
+                        </div>
+                    </div>
+                    <div class="service-description">
+                        Indexer manager that syncs with all *arr applications. One-stop indexer setup.
+                    </div>
+                    <div class="service-links">
+                        <a href="javascript:void(0)" class="service-link" data-port="9696">Open Prowlarr</a>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">🎵</div>
+                        <div>
+                            <div class="service-title">Slskd<span class="service-port">:5030</span></div>
+                        </div>
+                    </div>
+                    <div class="service-description">
+                        Soulseek client for rare and obscure music. Perfect for tracks you can't find anywhere else.
+                    </div>
+                    <div class="service-links">
+                        <a href="javascript:void(0)" class="service-link" data-port="5030">Open Slskd</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Infrastructure -->
+        <div class="category">
+            <h2 class="category-title">🔧 Infrastructure</h2>
+            <div class="services">
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">🐳</div>
+                        <div>
+                            <div class="service-title">Portainer<span class="service-port">:9443</span></div>
+                        </div>
+                    </div>
+                    <div class="service-description">
+                        Docker container management via web UI. Restart, stop, monitor containers, and view logs.
+                    </div>
+                    <div class="service-links">
+                        <a href="javascript:void(0)" class="service-link" data-port="9443" data-protocol="https">Open Portainer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Build dynamic links based on current hostname
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentHost = window.location.hostname;
+            const links = document.querySelectorAll('.service-link');
+            
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const port = this.getAttribute('data-port');
+                    const protocol = this.getAttribute('data-protocol') || 'http';
+                    const url = `${protocol}://${currentHost}:${port}/`;
+                    window.open(url, '_blank');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
