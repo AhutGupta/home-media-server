@@ -1,31 +1,24 @@
 # Code of Conduct
 
-We want this project to be a welcoming and inclusive space for all contributors. Therefore, we have adopted this code of conduct to ensure that all participants feel safe and respected.
+We are committed to providing a welcoming, safe, and inclusive environment for everyone.
 
-## Comportement attendu
+## Expected Behavior
+- Treat everyone with respect and kindness
+- Assume good intent and be patient when clarifying misunderstandings
+- Offer constructive feedback focused on the work, not the person
+- Be open to collaboration and knowledge sharing
 
-* Treat everyone with respect and kindness.
-* Be patient and tolerant towards others, especially those who may have different opinions from yours.
-* Be open to collaboration and contribution from others.
-* Be constructive in your feedback and criticism.
-* Be responsible for your actions and words.
+## Unacceptable Behavior
+- Harassment, discrimination, or hateful conduct in any form
+- Threats, stalking, or encouraging self-harm
+- Publishing others’ private information without explicit permission
+- Spam, unsolicited advertising, or illegal activity
 
-## Comportement inacceptable
+## Enforcement
+- Project maintainers may take any action they deem appropriate, including warnings, temporary bans, or permanent removal from the community.
 
-* Discriminatory or harassing comments or behavior, including those based on race, gender, sexual orientation, gender identity, age, religion, nationality, or disability, will not be tolerated.
-* Threatening, violent, or aggressive comments or behavior will not be tolerated.
-* Spam, unsolicited advertising, or illegal activities will not be tolerated.
-
-## Consequences
-
-Anyone who violates this code of conduct may be excluded from the project at the discretion of the project administrators.
-
-## Reporting an Incident
-
-If you witness or are the victim of unacceptable behavior, please contact the project administrators by sending an email to [project email address].
-
-We take all complaints seriously and are committed to investigating all allegations of unacceptable behavior.
+## Reporting
+If you experience or witness unacceptable behavior, please contact the maintainers at **conduct@ahutgupta.dev**. Provide as much detail as possible (links, screenshots, timestamps). Reports will be handled discreetly.
 
 ## Attribution
-
-This code of conduct is adapted from the Contributor Covenant, version 1.4, available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html.
+Adapted from the [Contributor Covenant](https://www.contributor-covenant.org/) v2.1.

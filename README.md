@@ -42,22 +42,29 @@ All services communicate seamlessly to automate your media management workflow.
 ## 🚀 Quick Start
 
 ```bash
-# 1. Clone repository
+# 1) Clone repository
 git clone https://github.com/AhutGupta/home-media-server.git
 cd home-media-server/compose_files
 
-# 2. Configure environment
+# 2) Configure environment
 cp .env.example .env
-nano .env  # Edit with your settings
+# edit paths, media locations, and (optionally) TS_AUTHKEY / VPN creds
 
-# 3. Start all services
+# 3) Choose a compose file
+# Standard CPU
 docker-compose up -d
+# Nvidia GPU transcoding
+# docker-compose -f docker-compose-nvidia.yaml up -d
+# VPN-first variants
+# docker-compose -f ./VPN-Only/docker-compose-proton-vpn.yaml up -d
+# docker-compose -f ./VPN-Only/docker-compose-nord-vpn.yaml up -d
+# (Nvidia + VPN options are under ./VPN-Nvidia/)
 
-# 4. Open dashboard
+# 4) Open the dashboard
 open http://localhost/
 ```
 
-**Next Steps**: Follow the [Setup Guide](SETUP_GUIDE.md) to configure each service.
+**Next Steps**: Use the [Getting Started Flow](#getting-started-flow) below, then follow the detailed [Setup Guide](SETUP_GUIDE.md).
 
 ## 📦 What's Included
 
@@ -135,6 +142,27 @@ http://100.x.x.x:8096/         # Using Tailscale IP
 3. **Sonarr/Radarr/Lidarr**: Connect to Prowlarr and qBittorrent
 4. **Jellyfin**: Add media libraries
 5. **Jellyseerr**: Connect to Jellyfin and *arr apps
+
+<a id="getting-started-flow"></a>
+## 🧭 Getting Started Flow
+
+1. **Set paths & keys**  
+   - Copy `compose_files/.env.example` to `.env` and update media paths.  
+   - Add `TS_AUTHKEY` for Tailscale (optional) and VPN creds only if using VPN compose files.
+2. **Start containers** with the compose file that matches your setup (CPU, Nvidia, or VPN variant).
+3. **Secure the core services**  
+   - Change the qBittorrent default password.  
+   - Restrict dashboards to your LAN/Tailscale network.
+4. **Wire downloads → indexers → automation**  
+   - In Prowlarr: add your indexers and define a download app for qBittorrent.  
+   - In Sonarr/Radarr/Lidarr: add Prowlarr as the indexer source and qBittorrent as the download client.  
+   - In Jellyseerr: connect to Jellyfin and point requests to Sonarr/Radarr.
+5. **Verify media paths**  
+   - Ensure the paths in Sonarr/Radarr/Lidarr match the Docker volume mounts from `.env` (e.g., `/media/Movies`, `/media/TV`).  
+   - Confirm completed downloads are imported into Jellyfin libraries.
+6. **Remote access (optional)**  
+   - Sign into Tailscale with your auth key for secure access without port-forwarding.  
+   - Use VPN compose variants only if your ISP blocks/filters traffic and you prefer egress through Proton/Nord.
 
 **Detailed Instructions**: See [SETUP_GUIDE.md](SETUP_GUIDE.md) for step-by-step configuration.
 
@@ -246,7 +274,7 @@ If you find this project useful, please consider giving it a star! ⭐
 
 ## 📝 Changelog
 
-See [Releases](https://github.com/AhutGupta/home-media-server/releases) for version history and changes.
+See [CHANGELOG.md](CHANGELOG.md) for notable changes.
 
 ## 📧 Support
 

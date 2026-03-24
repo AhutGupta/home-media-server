@@ -5,18 +5,19 @@ This guide helps you configure all services after initial installation. Each sec
 ## Table of Contents
 
 1. [Initial Setup](#initial-setup)
-2. [Jellyfin Configuration](#jellyfin-configuration)
-3. [Download Client (qBittorrent)](#download-client-qbittorrent)
-4. [Indexer Manager (Prowlarr)](#indexer-manager-prowlarr)
-5. [TV Shows (Sonarr)](#tv-shows-sonarr)
-6. [Movies (Radarr)](#movies-radarr)
-7. [Music (Lidarr)](#music-lidarr)
-8. [Content Requests (Jellyseerr)](#content-requests-jellyseerr)
-9. [Subtitles (Bazarr)](#subtitles-bazarr)
-10. [Container Management (Portainer)](#container-management-portainer)
-11. [Podcasts & Audiobooks (Audiobookshelf)](#podcasts--audiobooks-audiobookshelf)
-12. [Music Discovery (Slskd)](#music-discovery-slskd)
-13. [Music Tagging (Beets)](#music-tagging-beets)
+2. [Quick Wiring Checklist](#quick-wiring-checklist)
+3. [Jellyfin Configuration](#jellyfin-configuration)
+4. [Download Client (qBittorrent)](#download-client-qbittorrent)
+5. [Indexer Manager (Prowlarr)](#indexer-manager-prowlarr)
+6. [TV Shows (Sonarr)](#tv-shows-sonarr)
+7. [Movies (Radarr)](#movies-radarr)
+8. [Music (Lidarr)](#music-lidarr)
+9. [Content Requests (Jellyseerr)](#content-requests-jellyseerr)
+10. [Subtitles (Bazarr)](#subtitles-bazarr)
+11. [Container Management (Portainer)](#container-management-portainer)
+12. [Podcasts & Audiobooks (Audiobookshelf)](#podcasts--audiobooks-audiobookshelf)
+13. [Music Discovery (Slskd)](#music-discovery-slskd)
+14. [Music Tagging (Beets)](#music-tagging-beets)
 
 ---
 
@@ -45,6 +46,22 @@ docker-compose up -d
 ### 3. Access Dashboard
 
 Open `http://localhost/` to see all services.
+
+---
+
+## Quick Wiring Checklist
+
+Use this sequence after the containers are running to connect everything end-to-end:
+
+1. **qBittorrent**: Log in at `http://localhost:8080`, change the default password, and keep downloads in `/downloads`.
+2. **Prowlarr**: Add your indexers, then add a download client pointing to `http://qbittorrent:8080` with your new qBittorrent credentials.
+3. **Sonarr / Radarr / Lidarr**:  
+   - Add Prowlarr as the indexer source (`http://prowlarr:9696` with your Prowlarr API key).  
+   - Add qBittorrent as the download client (`http://qbittorrent:8080`).  
+   - Set root folders to match your mounts (e.g., `/media/TV`, `/media/Movies`, `/media/Music`).
+4. **Jellyseerr**: Connect to Jellyfin, then to Sonarr/Radarr using their internal URLs (`http://sonarr:8989`, `http://radarr:7878`).
+5. **Jellyfin**: Add libraries that match the same paths used above so completed downloads are imported automatically.
+6. **Verify**: Request one test movie/episode in Jellyseerr → confirm it appears in Sonarr/Radarr → downloaded by qBittorrent → imported into Jellyfin.
 
 ---
 
