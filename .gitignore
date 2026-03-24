@@ -6,6 +6,7 @@
 # Ignore environment and config overrides
 .env
 .env.*
+!compose_files/.env.example
 
 # VSCode and OS files
 .vscode/
